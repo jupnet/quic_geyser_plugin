@@ -8,7 +8,7 @@ use quic_geyser_common::{
 };
 use quic_geyser_server::quic_server::QuicServer;
 use rand::{thread_rng, Rng};
-use solana_sdk::{account::Account, pubkey::Pubkey};
+use jupnet_sdk::{account::Account, pubkey::Pubkey};
 use std::time::Duration;
 
 pub mod cli;

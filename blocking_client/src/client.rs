@@ -75,7 +75,7 @@ mod tests {
         },
     };
     use quic_geyser_server::quic_server::QuicServer;
-    use solana_sdk::pubkey::Pubkey;
+    use jupnet_sdk::pubkey::Pubkey;
     use std::{net::SocketAddr, thread::sleep, time::Duration};
 
     pub fn get_account_for_test(slot: u64, data_size: usize) -> Account {

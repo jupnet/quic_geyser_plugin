@@ -15,7 +15,7 @@ use quic_geyser_common::{
         transaction::{Transaction, TransactionMeta},
     },
 };
-use solana_sdk::{
+use jupnet_sdk::{
     account::Account,
     hash::Hash,
     message::{

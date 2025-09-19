@@ -1,4 +1,4 @@
-use solana_sdk::{account::Account, clock::Slot, pubkey::Pubkey};
+use jupnet_sdk::{account::Account, clock::Slot, pubkey::Pubkey};
 
 use crate::types::block_meta::SlotStatus;
 use crate::types::{block::Block, block_meta::BlockMeta, transaction::Transaction};

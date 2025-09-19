@@ -12,7 +12,7 @@ use quic_geyser_common::{
         transaction::Transaction,
     },
 };
-use solana_sdk::pubkey::Pubkey;
+use jupnet_sdk::pubkey::Pubkey;
 
 pub fn start_block_building_thread(
     channel_messages: Receiver<ChannelMessage>,

@@ -7,11 +7,11 @@ authors = ["Godmode Galactus"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-solana-rpc-client = { workspace = true }
+jupnet-rpc-client = { workspace = true }
 
 clap = { workspace = true, features = ["derive", "env"]  }
 serde = { workspace = true }
-solana-sdk = { workspace = true }
+jupnet-sdk = { workspace = true }
 serde_json = { workspace = true }
 anyhow = { workspace = true }
 log = { workspace = true }

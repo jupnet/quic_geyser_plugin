@@ -10,7 +10,7 @@ authors = ["Godmode Galactus"]
 
 clap = { workspace = true, features = ["derive", "env"]  }
 serde = { workspace = true }
-solana-sdk = { workspace = true }
+jupnet-sdk = { workspace = true }
 serde_json = { workspace = true }
 anyhow = { workspace = true }
 log = { workspace = true }

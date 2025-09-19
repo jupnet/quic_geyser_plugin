@@ -362,7 +362,7 @@ mod tests {
 
     use itertools::Itertools;
     use quic_geyser_server::quiche_server_loop::server_loop;
-    use solana_sdk::{account::Account, pubkey::Pubkey};
+    use jupnet_sdk::{account::Account, pubkey::Pubkey};
 
     use quic_geyser_common::{
         channel_message::{AccountData, ChannelMessage},
