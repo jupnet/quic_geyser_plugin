@@ -1,5 +1,5 @@
+use jupnet_transaction_status::Reward;
 use serde::{Deserialize, Serialize};
-use solana_transaction_status::Reward;
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
 #[repr(u8)]

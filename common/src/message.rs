@@ -58,8 +58,8 @@ impl Message {
 #[cfg(test)]
 mod tests {
     use itertools::Itertools;
+    use jupnet_sdk::pubkey::Pubkey;
     use rand::{rngs::ThreadRng, Rng};
-    use solana_sdk::pubkey::Pubkey;
 
     use crate::types::{
         account::Account,

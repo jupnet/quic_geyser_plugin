@@ -242,6 +242,7 @@ impl rustls::client::ServerCertVerifier for ClientSkipServerVerification {
 #[cfg(test)]
 mod tests {
     use itertools::Itertools;
+    use jupnet_sdk::pubkey::Pubkey;
     use quic_geyser_common::{
         channel_message::AccountData,
         compression::CompressionType,
@@ -255,7 +256,6 @@ mod tests {
         },
     };
     use quic_geyser_server::quic_server::QuicServer;
-    use jupnet_sdk::pubkey::Pubkey;
     use std::{net::SocketAddr, thread::sleep, time::Duration};
 
     pub fn get_account_for_test(slot: u64, data_size: usize) -> Account {
@@ -323,7 +323,7 @@ mod tests {
                             quic_geyser_common::channel_message::ChannelMessage::Account(
                                 AccountData {
                                     pubkey: account.pubkey,
-                                    account: account.solana_account(),
+                                    account: account.jupnet_account(),
                                     write_version: account.write_version,
                                 },
                                 account.slot_identifier.slot,

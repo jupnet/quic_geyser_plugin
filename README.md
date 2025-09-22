@@ -1,13 +1,13 @@
 # QUIC GEYSER PLUGIN
 
-Solana geyser plugin which implements quic frontend for faster http-3 access of solana data.
+Jupnet geyser plugin which implements quic frontend for faster http-3 access of jupnet data.
 
 ### Running Geyser
 
 Compile and start the geyser plugin on a validator, and example config file is provided in `config.json`.
 
 ```
-// To start a validator with geyser plugin add following argument to the solana validator
+// To start a validator with geyser plugin add following argument to the jupnet validator
 --geyser-plugin-config config.json
 ```
 

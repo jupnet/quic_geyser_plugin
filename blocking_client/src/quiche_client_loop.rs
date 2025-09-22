@@ -361,8 +361,8 @@ mod tests {
     };
 
     use itertools::Itertools;
-    use quic_geyser_server::quiche_server_loop::server_loop;
     use jupnet_sdk::{account::Account, pubkey::Pubkey};
+    use quic_geyser_server::quiche_server_loop::server_loop;
 
     use quic_geyser_common::{
         channel_message::{AccountData, ChannelMessage},
@@ -525,7 +525,7 @@ mod tests {
         let Message::AccountMsg(message_rx_2) = message_rx_2 else {
             panic!("message should be account");
         };
-        let message_account = message_rx_2.solana_account();
+        let message_account = message_rx_2.jupnet_account();
         assert_eq!(account.pubkey, message_rx_2.pubkey);
         assert_eq!(account.account, message_account);
         assert_eq!(message_rx_2.slot_identifier.slot, *slot);
@@ -538,7 +538,7 @@ mod tests {
         let Message::AccountMsg(message_rx_3) = message_rx_3 else {
             panic!("message should be account");
         };
-        let message_account = message_rx_3.solana_account();
+        let message_account = message_rx_3.jupnet_account();
         assert_eq!(account.pubkey, message_rx_3.pubkey);
         assert_eq!(account.account, message_account);
         assert_eq!(message_rx_3.slot_identifier.slot, *slot);
@@ -550,7 +550,7 @@ mod tests {
         let Message::AccountMsg(message_rx_4) = message_rx_4 else {
             panic!("message should be account");
         };
-        let message_account = message_rx_4.solana_account();
+        let message_account = message_rx_4.jupnet_account();
         assert_eq!(account.pubkey, message_rx_4.pubkey);
         assert_eq!(account.account, message_account);
         assert_eq!(message_rx_4.slot_identifier.slot, *slot);
@@ -562,7 +562,7 @@ mod tests {
         let Message::AccountMsg(message_rx_5) = message_rx_5 else {
             panic!("message should be account");
         };
-        let message_account = message_rx_5.solana_account();
+        let message_account = message_rx_5.jupnet_account();
         assert_eq!(account.pubkey, message_rx_5.pubkey);
         assert_eq!(account.account, message_account);
         assert_eq!(message_rx_5.slot_identifier.slot, *slot);

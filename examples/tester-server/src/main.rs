@@ -1,6 +1,7 @@
 use clap::Parser;
 use cli::Args;
 use itertools::Itertools;
+use jupnet_sdk::{account::Account, pubkey::Pubkey};
 use quic_geyser_common::{
     channel_message::{AccountData, ChannelMessage},
     config::{CompressionParameters, ConfigQuicPlugin, QuicParameters},
@@ -8,7 +9,6 @@ use quic_geyser_common::{
 };
 use quic_geyser_server::quic_server::QuicServer;
 use rand::{thread_rng, Rng};
-use jupnet_sdk::{account::Account, pubkey::Pubkey};
 use std::time::Duration;
 
 pub mod cli;

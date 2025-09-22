@@ -4,6 +4,7 @@ use std::{
 };
 
 use itertools::Itertools;
+use jupnet_sdk::pubkey::Pubkey;
 use quic_geyser_common::{
     channel_message::{AccountData, ChannelMessage},
     compression::CompressionType,
@@ -12,7 +13,6 @@ use quic_geyser_common::{
         transaction::Transaction,
     },
 };
-use jupnet_sdk::pubkey::Pubkey;
 
 pub fn start_block_building_thread(
     channel_messages: Receiver<ChannelMessage>,

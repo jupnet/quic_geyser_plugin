@@ -1,11 +1,9 @@
-use serde::{Deserialize, Serialize};
-use solana_sdk::{
-    message::v0::{LoadedAddresses, Message},
-    signature::Signature,
-    transaction::TransactionError,
+use jupnet_sdk::{
+    message::Message, signature::TypedSignature, transaction::TransactionError,
     transaction_context::TransactionReturnData,
 };
-use solana_transaction_status::{InnerInstructions, Rewards};
+use jupnet_transaction_status::{InnerInstructions, Rewards};
+use serde::{Deserialize, Serialize};
 
 use super::slot_identifier::SlotIdentifier;
 
@@ -19,7 +17,6 @@ pub struct TransactionMeta {
     pub inner_instructions: Option<Vec<InnerInstructions>>,
     pub log_messages: Option<Vec<String>>,
     pub rewards: Option<Rewards>,
-    pub loaded_addresses: LoadedAddresses,
     pub return_data: Option<TransactionReturnData>,
     pub compute_units_consumed: Option<u64>,
 }
@@ -28,7 +25,7 @@ pub struct TransactionMeta {
 #[repr(C)]
 pub struct Transaction {
     pub slot_identifier: SlotIdentifier,
-    pub signatures: Vec<Signature>,
+    pub signatures: Vec<TypedSignature>,
     pub message: Message,
     pub is_vote: bool,
     pub transasction_meta: TransactionMeta,

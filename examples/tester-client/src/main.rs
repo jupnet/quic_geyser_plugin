@@ -11,13 +11,13 @@ use std::{
 
 use clap::Parser;
 use cli::Args;
+use jupnet_rpc_client::rpc_client::RpcClient;
+use jupnet_sdk::commitment_config::CommitmentConfig;
 use quic_geyser_client::non_blocking::client::Client;
 use quic_geyser_common::{
     filters::Filter,
     types::{block_meta::SlotStatus, connections_parameters::ConnectionParameters},
 };
-use solana_rpc_client::rpc_client::RpcClient;
-use solana_sdk::commitment_config::CommitmentConfig;
 
 pub mod cli;
 
@@ -155,17 +155,17 @@ fn blocking(args: Args, client_stats: ClientStats, break_thread: Arc<AtomicBool>
                     client_stats
                         .total_accounts_size
                         .fetch_add(account.data_length, std::sync::atomic::Ordering::Relaxed);
-                    let solana_account = account.solana_account();
-                    if solana_account.data.len() != data_len {
+                    let jupnet_account = account.jupnet_account();
+                    if jupnet_account.data.len() != data_len {
                         println!("data length different");
                         println!(
                             "Account : {}, owner: {}=={}, datalen: {}=={}, lamports: {}",
                             account.pubkey,
                             account.owner,
-                            solana_account.owner,
+                            jupnet_account.owner,
                             data_len,
-                            solana_account.data.len(),
-                            solana_account.lamports
+                            jupnet_account.data.len(),
+                            jupnet_account.lamports
                         );
                         panic!("Wrong account data");
                     }
@@ -266,17 +266,17 @@ async fn non_blocking(args: Args, client_stats: ClientStats, break_thread: Arc<A
                     client_stats
                         .total_accounts_size
                         .fetch_add(account.data_length, std::sync::atomic::Ordering::Relaxed);
-                    let solana_account = account.solana_account();
-                    if solana_account.data.len() != data_len {
+                    let jupnet_account = account.jupnet_account();
+                    if jupnet_account.data.len() != data_len {
                         println!("data length different");
                         println!(
                             "Account : {}, owner: {}=={}, datalen: {}=={}, lamports: {}",
                             account.pubkey,
                             account.owner,
-                            solana_account.owner,
+                            jupnet_account.owner,
                             data_len,
-                            solana_account.data.len(),
-                            solana_account.lamports
+                            jupnet_account.data.len(),
+                            jupnet_account.lamports
                         );
                         panic!("Wrong account data");
                     }

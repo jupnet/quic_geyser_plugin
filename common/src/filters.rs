@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
+use jupnet_sdk::{pubkey::Pubkey, signature::TypedSignature};
 use serde::{Deserialize, Serialize};
-use jupnet_sdk::{pubkey::Pubkey, signature::Signature};
 
 use crate::channel_message::ChannelMessage;
 
@@ -13,7 +13,7 @@ pub enum Filter {
     AccountsAll,
     Slot,
     BlockMeta,
-    Transaction(Signature),
+    Transaction(TypedSignature),
     TransactionsAll,
     BlockAll,
     DeletedAccounts,
@@ -26,8 +26,8 @@ impl Filter {
             Filter::Account(account) => account.allows(message),
             Filter::AccountsAll => match message {
                 ChannelMessage::Account(account, _, _init) => {
-                    account.account.owner != solana_program::vote::program::ID // does not belong to vote program
-                        && account.account.owner != solana_program::stake::program::ID
+                    account.account.owner != jupnet_program::vote::program::ID // does not belong to vote program
+                        && account.account.owner != jupnet_program::stake::program::ID
                     // does not belong to stake program
                 }
                 _ => false,
@@ -125,7 +125,7 @@ impl AccountFilter {
 
 #[cfg(test)]
 mod tests {
-    use solana_sdk::{account::Account as SolanaAccount, pubkey::Pubkey};
+    use jupnet_sdk::{account::Account as JupnetAccount, pubkey::Pubkey};
 
     use crate::{
         channel_message::{AccountData, ChannelMessage},
@@ -140,28 +140,28 @@ mod tests {
 
         let owner_2 = Pubkey::new_unique();
 
-        let solana_account_1 = SolanaAccount {
+        let jupnet_accoung_1 = JupnetAccount {
             lamports: 1,
             data: vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             owner,
             executable: false,
             rent_epoch: 100,
         };
-        let solana_account_2 = SolanaAccount {
+        let jupnet_accoung_2 = JupnetAccount {
             lamports: 2,
             data: vec![11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
             owner,
             executable: false,
             rent_epoch: 100,
         };
-        let solana_account_3 = SolanaAccount {
+        let jupnet_accoung_3 = JupnetAccount {
             lamports: 3,
             data: vec![11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
             owner: owner_2,
             executable: false,
             rent_epoch: 100,
         };
-        let solana_account_4 = SolanaAccount {
+        let jupnet_accoung_4 = JupnetAccount {
             lamports: 3,
             data: vec![11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
             owner: owner_2,
@@ -172,7 +172,7 @@ mod tests {
         let msg_0 = ChannelMessage::Account(
             AccountData {
                 pubkey: Pubkey::new_unique(),
-                account: solana_account_1.clone(),
+                account: jupnet_accoung_1.clone(),
                 write_version: 0,
             },
             0,
@@ -182,7 +182,7 @@ mod tests {
         let msg_1 = ChannelMessage::Account(
             AccountData {
                 pubkey: Pubkey::new_unique(),
-                account: solana_account_1.clone(),
+                account: jupnet_accoung_1.clone(),
                 write_version: 0,
             },
             0,
@@ -192,7 +192,7 @@ mod tests {
         let msg_2 = ChannelMessage::Account(
             AccountData {
                 pubkey: Pubkey::new_unique(),
-                account: solana_account_2.clone(),
+                account: jupnet_accoung_2.clone(),
                 write_version: 0,
             },
             0,
@@ -202,7 +202,7 @@ mod tests {
         let msg_3 = ChannelMessage::Account(
             AccountData {
                 pubkey: Pubkey::new_unique(),
-                account: solana_account_3.clone(),
+                account: jupnet_accoung_3.clone(),
                 write_version: 0,
             },
             0,
@@ -211,7 +211,7 @@ mod tests {
         let msg_4 = ChannelMessage::Account(
             AccountData {
                 pubkey: Pubkey::new_unique(),
-                account: solana_account_4.clone(),
+                account: jupnet_accoung_4.clone(),
                 write_version: 0,
             },
             0,

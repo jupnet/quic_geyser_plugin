@@ -67,8 +67,8 @@ impl<const BUFFER_LEN: usize> StreamBuffer<BUFFER_LEN> {
 mod tests {
     use circular_buffer::CircularBuffer;
     use itertools::Itertools;
+    use jupnet_sdk::pubkey::Pubkey;
     use rand::{rngs::ThreadRng, Rng};
-    use solana_sdk::pubkey::Pubkey;
 
     use crate::{
         message::Message,

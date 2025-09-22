@@ -7,6 +7,13 @@ use std::{
 };
 
 use itertools::Itertools;
+use jupnet_sdk::{
+    account::Account,
+    hash::Hash,
+    message::{Message as JupnetMessage, MessageHeader},
+    pubkey::Pubkey,
+    signature::TypedSignature,
+};
 use quic_geyser_common::{
     channel_message::{AccountData, ChannelMessage},
     types::{
@@ -14,16 +21,6 @@ use quic_geyser_common::{
         slot_identifier::SlotIdentifier,
         transaction::{Transaction, TransactionMeta},
     },
-};
-use jupnet_sdk::{
-    account::Account,
-    hash::Hash,
-    message::{
-        v0::{LoadedAddresses, Message as SolanaMessage},
-        MessageHeader,
-    },
-    pubkey::Pubkey,
-    signature::Signature,
 };
 
 use crate::block_builder::start_block_building_thread;
@@ -124,8 +121,8 @@ fn test_block_creation_transactions_after_blockmeta() {
 
     let tx1 = Transaction {
         slot_identifier: SlotIdentifier { slot: 5 },
-        signatures: vec![Signature::new_unique()],
-        message: SolanaMessage {
+        signatures: vec![TypedSignature::new_unique()],
+        message: JupnetMessage {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -134,7 +131,6 @@ fn test_block_creation_transactions_after_blockmeta() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-            address_table_lookups: vec![],
         },
         is_vote: false,
         transasction_meta: TransactionMeta {
@@ -145,10 +141,6 @@ fn test_block_creation_transactions_after_blockmeta() {
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
-            loaded_addresses: LoadedAddresses {
-                writable: vec![],
-                readonly: vec![],
-            },
             return_data: None,
             compute_units_consumed: Some(1234),
         },
@@ -160,8 +152,8 @@ fn test_block_creation_transactions_after_blockmeta() {
 
     let tx2 = Transaction {
         slot_identifier: SlotIdentifier { slot: 6 },
-        signatures: vec![Signature::new_unique()],
-        message: SolanaMessage {
+        signatures: vec![TypedSignature::new_unique()],
+        message: JupnetMessage {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -170,7 +162,6 @@ fn test_block_creation_transactions_after_blockmeta() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-            address_table_lookups: vec![],
         },
         is_vote: false,
         transasction_meta: TransactionMeta {
@@ -181,10 +172,6 @@ fn test_block_creation_transactions_after_blockmeta() {
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
-            loaded_addresses: LoadedAddresses {
-                writable: vec![],
-                readonly: vec![],
-            },
             return_data: None,
             compute_units_consumed: Some(1234),
         },
@@ -196,8 +183,8 @@ fn test_block_creation_transactions_after_blockmeta() {
 
     let tx3 = Transaction {
         slot_identifier: SlotIdentifier { slot: 5 },
-        signatures: vec![Signature::new_unique()],
-        message: SolanaMessage {
+        signatures: vec![TypedSignature::new_unique()],
+        message: JupnetMessage {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -206,7 +193,6 @@ fn test_block_creation_transactions_after_blockmeta() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-            address_table_lookups: vec![],
         },
         is_vote: false,
         transasction_meta: TransactionMeta {
@@ -217,10 +203,6 @@ fn test_block_creation_transactions_after_blockmeta() {
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
-            loaded_addresses: LoadedAddresses {
-                writable: vec![],
-                readonly: vec![],
-            },
             return_data: None,
             compute_units_consumed: Some(1234),
         },
@@ -350,8 +332,8 @@ fn test_block_creation_blockmeta_after_transactions() {
 
     let tx1 = Transaction {
         slot_identifier: SlotIdentifier { slot: 5 },
-        signatures: vec![Signature::new_unique()],
-        message: SolanaMessage {
+        signatures: vec![TypedSignature::new_unique()],
+        message: JupnetMessage {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -360,7 +342,6 @@ fn test_block_creation_blockmeta_after_transactions() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-            address_table_lookups: vec![],
         },
         is_vote: false,
         transasction_meta: TransactionMeta {
@@ -371,10 +352,6 @@ fn test_block_creation_blockmeta_after_transactions() {
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
-            loaded_addresses: LoadedAddresses {
-                writable: vec![],
-                readonly: vec![],
-            },
             return_data: None,
             compute_units_consumed: Some(1234),
         },
@@ -386,8 +363,8 @@ fn test_block_creation_blockmeta_after_transactions() {
 
     let tx2 = Transaction {
         slot_identifier: SlotIdentifier { slot: 6 },
-        signatures: vec![Signature::new_unique()],
-        message: SolanaMessage {
+        signatures: vec![TypedSignature::new_unique()],
+        message: JupnetMessage {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -396,7 +373,6 @@ fn test_block_creation_blockmeta_after_transactions() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-            address_table_lookups: vec![],
         },
         is_vote: false,
         transasction_meta: TransactionMeta {
@@ -407,10 +383,6 @@ fn test_block_creation_blockmeta_after_transactions() {
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
-            loaded_addresses: LoadedAddresses {
-                writable: vec![],
-                readonly: vec![],
-            },
             return_data: None,
             compute_units_consumed: Some(1234),
         },
@@ -422,8 +394,8 @@ fn test_block_creation_blockmeta_after_transactions() {
 
     let tx3 = Transaction {
         slot_identifier: SlotIdentifier { slot: 5 },
-        signatures: vec![Signature::new_unique()],
-        message: SolanaMessage {
+        signatures: vec![TypedSignature::new_unique()],
+        message: JupnetMessage {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -432,7 +404,6 @@ fn test_block_creation_blockmeta_after_transactions() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-            address_table_lookups: vec![],
         },
         is_vote: false,
         transasction_meta: TransactionMeta {
@@ -443,10 +414,6 @@ fn test_block_creation_blockmeta_after_transactions() {
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
-            loaded_addresses: LoadedAddresses {
-                writable: vec![],
-                readonly: vec![],
-            },
             return_data: None,
             compute_units_consumed: Some(1234),
         },
@@ -583,8 +550,8 @@ fn test_block_creation_incomplete_block_after_slot_notification() {
 
     let tx1 = Transaction {
         slot_identifier: SlotIdentifier { slot: 5 },
-        signatures: vec![Signature::new_unique()],
-        message: SolanaMessage {
+        signatures: vec![TypedSignature::new_unique()],
+        message: JupnetMessage {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -593,7 +560,6 @@ fn test_block_creation_incomplete_block_after_slot_notification() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-            address_table_lookups: vec![],
         },
         is_vote: false,
         transasction_meta: TransactionMeta {
@@ -604,10 +570,6 @@ fn test_block_creation_incomplete_block_after_slot_notification() {
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
-            loaded_addresses: LoadedAddresses {
-                writable: vec![],
-                readonly: vec![],
-            },
             return_data: None,
             compute_units_consumed: Some(1234),
         },
@@ -619,8 +581,8 @@ fn test_block_creation_incomplete_block_after_slot_notification() {
 
     let tx2 = Transaction {
         slot_identifier: SlotIdentifier { slot: 6 },
-        signatures: vec![Signature::new_unique()],
-        message: SolanaMessage {
+        signatures: vec![TypedSignature::new_unique()],
+        message: JupnetMessage {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -629,7 +591,6 @@ fn test_block_creation_incomplete_block_after_slot_notification() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-            address_table_lookups: vec![],
         },
         is_vote: false,
         transasction_meta: TransactionMeta {
@@ -640,10 +601,6 @@ fn test_block_creation_incomplete_block_after_slot_notification() {
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
-            loaded_addresses: LoadedAddresses {
-                writable: vec![],
-                readonly: vec![],
-            },
             return_data: None,
             compute_units_consumed: Some(1234),
         },
@@ -655,8 +612,8 @@ fn test_block_creation_incomplete_block_after_slot_notification() {
 
     let tx3 = Transaction {
         slot_identifier: SlotIdentifier { slot: 5 },
-        signatures: vec![Signature::new_unique()],
-        message: SolanaMessage {
+        signatures: vec![TypedSignature::new_unique()],
+        message: JupnetMessage {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -665,7 +622,6 @@ fn test_block_creation_incomplete_block_after_slot_notification() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-            address_table_lookups: vec![],
         },
         is_vote: false,
         transasction_meta: TransactionMeta {
@@ -676,10 +632,6 @@ fn test_block_creation_incomplete_block_after_slot_notification() {
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
-            loaded_addresses: LoadedAddresses {
-                writable: vec![],
-                readonly: vec![],
-            },
             return_data: None,
             compute_units_consumed: Some(1234),
         },
@@ -813,8 +765,8 @@ fn test_block_creation_incomplete_slot() {
 
     let tx1 = Transaction {
         slot_identifier: SlotIdentifier { slot: 5 },
-        signatures: vec![Signature::new_unique()],
-        message: SolanaMessage {
+        signatures: vec![TypedSignature::new_unique()],
+        message: JupnetMessage {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -823,7 +775,6 @@ fn test_block_creation_incomplete_slot() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-            address_table_lookups: vec![],
         },
         is_vote: false,
         transasction_meta: TransactionMeta {
@@ -834,10 +785,6 @@ fn test_block_creation_incomplete_slot() {
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
-            loaded_addresses: LoadedAddresses {
-                writable: vec![],
-                readonly: vec![],
-            },
             return_data: None,
             compute_units_consumed: Some(1234),
         },
@@ -849,8 +796,8 @@ fn test_block_creation_incomplete_slot() {
 
     let tx2 = Transaction {
         slot_identifier: SlotIdentifier { slot: 6 },
-        signatures: vec![Signature::new_unique()],
-        message: SolanaMessage {
+        signatures: vec![TypedSignature::new_unique()],
+        message: JupnetMessage {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -859,7 +806,6 @@ fn test_block_creation_incomplete_slot() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-            address_table_lookups: vec![],
         },
         is_vote: false,
         transasction_meta: TransactionMeta {
@@ -870,10 +816,6 @@ fn test_block_creation_incomplete_slot() {
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
-            loaded_addresses: LoadedAddresses {
-                writable: vec![],
-                readonly: vec![],
-            },
             return_data: None,
             compute_units_consumed: Some(1234),
         },
@@ -888,8 +830,8 @@ fn test_block_creation_incomplete_slot() {
 
     let tx3 = Transaction {
         slot_identifier: SlotIdentifier { slot: 5 },
-        signatures: vec![Signature::new_unique()],
-        message: SolanaMessage {
+        signatures: vec![TypedSignature::new_unique()],
+        message: JupnetMessage {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -898,7 +840,6 @@ fn test_block_creation_incomplete_slot() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-            address_table_lookups: vec![],
         },
         is_vote: false,
         transasction_meta: TransactionMeta {
@@ -909,10 +850,6 @@ fn test_block_creation_incomplete_slot() {
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
-            loaded_addresses: LoadedAddresses {
-                writable: vec![],
-                readonly: vec![],
-            },
             return_data: None,
             compute_units_consumed: Some(1234),
         },

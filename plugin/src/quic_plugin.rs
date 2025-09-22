@@ -3,6 +3,7 @@ use agave_geyser_plugin_interface::geyser_plugin_interface::{
     GeyserPlugin, GeyserPluginError, ReplicaAccountInfoVersions, ReplicaBlockInfoVersions,
     ReplicaEntryInfoVersions, ReplicaTransactionInfoVersions, Result as PluginResult, SlotStatus,
 };
+use jupnet_sdk::{account::Account, clock::Slot, message::Message, pubkey::Pubkey};
 use quic_geyser_block_builder::block_builder::start_block_building_thread;
 use quic_geyser_common::{
     channel_message::{AccountData, ChannelMessage},
@@ -14,7 +15,6 @@ use quic_geyser_common::{
     },
 };
 use quic_geyser_server::quic_server::QuicServer;
-use solana_sdk::{account::Account, clock::Slot, message::v0::Message, pubkey::Pubkey};
 
 #[derive(Debug, Default)]
 pub struct QuicGeyserPlugin {
@@ -41,7 +41,7 @@ impl GeyserPlugin for QuicGeyserPlugin {
         let enable_block_builder = config.quic_plugin.enable_block_builder;
         let build_blocks_with_accounts = config.quic_plugin.build_blocks_with_accounts;
         log::info!("Quic plugin config correctly loaded");
-        solana_logger::setup_with_default(&config.quic_plugin.log_level);
+        jupnet_logger::setup_with_default(&config.quic_plugin.log_level);
         let quic_server = QuicServer::new(config.quic_plugin).map_err(|_| {
             GeyserPluginError::Custom(Box::new(QuicGeyserError::ErrorConfiguringServer))
         })?;
@@ -168,13 +168,13 @@ impl GeyserPlugin for QuicGeyserPlugin {
         let Some(quic_server) = &self.quic_server else {
             return Ok(());
         };
-        let ReplicaTransactionInfoVersions::V0_0_2(solana_transaction) = transaction else {
+        let ReplicaTransactionInfoVersions::V0_0_2(jupiter_transaction) = transaction else {
             return Err(GeyserPluginError::TransactionUpdateError {
                 msg: "Unsupported transaction version".to_string(),
             });
         };
 
-        let message = solana_transaction.transaction.message();
+        let message = jupiter_transaction.transaction.message();
         let mut account_keys = vec![];
 
         for index in 0.. {
@@ -185,21 +185,28 @@ impl GeyserPlugin for QuicGeyserPlugin {
             }
         }
 
-        let v0_message = Message {
-            header: *message.header(),
-            account_keys,
-            recent_blockhash: *message.recent_blockhash(),
-            instructions: message.instructions().to_vec(),
-            address_table_lookups: message.message_address_table_lookups().to_vec(),
+        let legacy_message = if let Some(message) = message.to_legacy_message() {
+            message
+        } else {
+            return Err(GeyserPluginError::TransactionUpdateError {
+                msg: "Unsupported batched transactin".to_string(),
+            });
         };
 
-        let status_meta = solana_transaction.transaction_status_meta;
+        let message = Message {
+            header: legacy_message.message.header,
+            account_keys,
+            recent_blockhash: *message.recent_blockhash(),
+            instructions: legacy_message.message.instructions.to_vec(),
+        };
+
+        let status_meta = jupiter_transaction.transaction_status_meta;
 
         let transaction = Transaction {
             slot_identifier: SlotIdentifier { slot },
-            signatures: solana_transaction.transaction.signatures().to_vec(),
-            message: v0_message,
-            is_vote: solana_transaction.is_vote,
+            signatures: jupiter_transaction.transaction.signatures().to_vec(),
+            message,
+            is_vote: jupiter_transaction.is_vote,
             transasction_meta: TransactionMeta {
                 error: match &status_meta.status {
                     Ok(_) => None,
@@ -211,11 +218,10 @@ impl GeyserPlugin for QuicGeyserPlugin {
                 inner_instructions: status_meta.inner_instructions.clone(),
                 log_messages: status_meta.log_messages.clone(),
                 rewards: status_meta.rewards.clone(),
-                loaded_addresses: status_meta.loaded_addresses.clone(),
                 return_data: status_meta.return_data.clone(),
-                compute_units_consumed: status_meta.compute_units_consumed,
+                compute_units_consumed: Some(status_meta.compute_units_consumed),
             },
-            index: solana_transaction.index as u64,
+            index: jupiter_transaction.index as u64,
         };
 
         let transaction_message = ChannelMessage::Transaction(Box::new(transaction));

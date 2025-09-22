@@ -87,7 +87,7 @@ pub fn main() -> anyhow::Result<()> {
                 ChannelMessage::Account(
                     AccountData {
                         pubkey: account_message.pubkey,
-                        account: account_message.solana_account(),
+                        account: account_message.jupnet_account(),
                         write_version: account_message.write_version,
                     },
                     account_message.slot_identifier.slot,
