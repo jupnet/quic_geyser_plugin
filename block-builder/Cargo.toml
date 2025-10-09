@@ -10,7 +10,7 @@ edition = "2021"
 jupnet-sdk = { workspace = true }
 anyhow = { workspace = true }
 log = { workspace = true }
-mio_channel = {workspace = true}
+tokio = { workspace = true }
 
 quic-geyser-common = { workspace = true }
 bincode = { workspace = true }

@@ -3,7 +3,9 @@ use agave_geyser_plugin_interface::geyser_plugin_interface::{
     GeyserPlugin, GeyserPluginError, ReplicaAccountInfoVersions, ReplicaBlockInfoVersions,
     ReplicaEntryInfoVersions, ReplicaTransactionInfoVersions, Result as PluginResult, SlotStatus,
 };
-use jupnet_sdk::{account::Account, clock::Slot, message::Message, pubkey::Pubkey};
+use jupnet_sdk::{
+    account::Account, clock::Slot, message::Message, pubkey::Pubkey, signature::Keypair,
+};
 use quic_geyser_block_builder::block_builder::start_block_building_thread;
 use quic_geyser_common::{
     channel_message::{AccountData, ChannelMessage},
@@ -19,7 +21,7 @@ use quic_geyser_server::quic_server::QuicServer;
 #[derive(Debug, Default)]
 pub struct QuicGeyserPlugin {
     quic_server: Option<QuicServer>,
-    block_builder_channel: Option<std::sync::mpsc::Sender<ChannelMessage>>,
+    block_builder_channel: Option<tokio::sync::mpsc::UnboundedSender<ChannelMessage>>,
     rpc_server_message_channel: Option<std::sync::mpsc::Sender<ChannelMessage>>,
 }
 
@@ -42,12 +44,12 @@ impl GeyserPlugin for QuicGeyserPlugin {
         let build_blocks_with_accounts = config.quic_plugin.build_blocks_with_accounts;
         log::info!("Quic plugin config correctly loaded");
         jupnet_logger::setup_with_default(&config.quic_plugin.log_level);
-        let quic_server = QuicServer::new(config.quic_plugin).map_err(|_| {
+        let quic_server = QuicServer::new(config.quic_plugin, Keypair::new()).map_err(|_| {
             GeyserPluginError::Custom(Box::new(QuicGeyserError::ErrorConfiguringServer))
         })?;
         if enable_block_builder {
             // disable block building for now
-            let (sx, rx) = std::sync::mpsc::channel();
+            let (sx, rx) = tokio::sync::mpsc::unbounded_channel();
             start_block_building_thread(
                 rx,
                 quic_server.data_channel_sender.clone(),
@@ -81,11 +83,7 @@ impl GeyserPlugin for QuicGeyserPlugin {
         {
             return Ok(());
         }
-        let ReplicaAccountInfoVersions::V0_0_3(account_info) = account else {
-            return Err(GeyserPluginError::AccountsUpdateError {
-                msg: "Unsupported account info version".to_string(),
-            });
-        };
+        let ReplicaAccountInfoVersions::V0_0_3(account_info) = account;
         let account = Account {
             lamports: account_info.lamports,
             data: account_info.data.to_vec(),
@@ -168,11 +166,7 @@ impl GeyserPlugin for QuicGeyserPlugin {
         let Some(quic_server) = &self.quic_server else {
             return Ok(());
         };
-        let ReplicaTransactionInfoVersions::V0_0_2(jupiter_transaction) = transaction else {
-            return Err(GeyserPluginError::TransactionUpdateError {
-                msg: "Unsupported transaction version".to_string(),
-            });
-        };
+        let ReplicaTransactionInfoVersions::V0_0_3(jupiter_transaction) = transaction;
 
         let message = jupiter_transaction.transaction.message();
         let mut account_keys = vec![];
@@ -246,11 +240,7 @@ impl GeyserPlugin for QuicGeyserPlugin {
             return Ok(());
         };
 
-        let ReplicaBlockInfoVersions::V0_0_4(blockinfo) = blockinfo else {
-            return Err(GeyserPluginError::AccountsUpdateError {
-                msg: "Unsupported account info version".to_string(),
-            });
-        };
+        let ReplicaBlockInfoVersions::V0_0_4(blockinfo) = blockinfo;
 
         let block_meta = BlockMeta {
             parent_slot: blockinfo.parent_slot,

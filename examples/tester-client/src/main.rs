@@ -120,113 +120,11 @@ impl<T: Ord + Display + Default + Copy> Stats<T> {
     }
 }
 
-fn blocking(args: Args, client_stats: ClientStats, break_thread: Arc<AtomicBool>) {
-    println!("Connecting");
-    let (client, reciever) =
-        quic_geyser_blocking_client::client::Client::new(args.url, ConnectionParameters::default())
-            .unwrap();
-    println!("Connected");
-    let mut filters = vec![Filter::Slot, Filter::BlockMeta];
-    if args.blocks_instead_of_accounts {
-        filters.push(Filter::BlockAll);
-    } else {
-        filters.push(Filter::AccountsAll);
-    }
-
-    sleep(Duration::from_millis(100));
-    println!("Subscribing");
-    client.subscribe(filters).unwrap();
-    println!("Subscribed");
-
-    std::thread::spawn(move || {
-        let _client = client;
-        while let Ok(message) = reciever.recv() {
-            let message_size = message.to_binary_stream().len();
-            client_stats
-                .bytes_transfered
-                .fetch_add(message_size as u64, std::sync::atomic::Ordering::Relaxed);
-            match message {
-                quic_geyser_common::message::Message::AccountMsg(account) => {
-                    log::trace!("got account notification : {} ", account.pubkey);
-                    client_stats
-                        .account_notification
-                        .fetch_add(1, std::sync::atomic::Ordering::Relaxed);
-                    let data_len = account.data_length as usize;
-                    client_stats
-                        .total_accounts_size
-                        .fetch_add(account.data_length, std::sync::atomic::Ordering::Relaxed);
-                    let jupnet_account = account.jupnet_account();
-                    if jupnet_account.data.len() != data_len {
-                        println!("data length different");
-                        println!(
-                            "Account : {}, owner: {}=={}, datalen: {}=={}, lamports: {}",
-                            account.pubkey,
-                            account.owner,
-                            jupnet_account.owner,
-                            data_len,
-                            jupnet_account.data.len(),
-                            jupnet_account.lamports
-                        );
-                        panic!("Wrong account data");
-                    }
-
-                    client_stats.account_slot.store(
-                        account.slot_identifier.slot,
-                        std::sync::atomic::Ordering::Relaxed,
-                    );
-                }
-                quic_geyser_common::message::Message::SlotMsg(slot) => {
-                    log::trace!("got slot notification : {} ", slot.slot);
-                    client_stats
-                        .slot_notifications
-                        .fetch_add(1, std::sync::atomic::Ordering::Relaxed);
-                    if slot.slot_status == SlotStatus::FirstShredReceived {
-                        client_stats
-                            .slot_slot
-                            .store(slot.slot, std::sync::atomic::Ordering::Relaxed);
-                    }
-                }
-                quic_geyser_common::message::Message::BlockMetaMsg(block_meta) => {
-                    log::trace!("got blockmeta notification : {} ", block_meta.slot);
-                    client_stats
-                        .blockmeta_notifications
-                        .fetch_add(1, std::sync::atomic::Ordering::Relaxed);
-                    client_stats
-                        .blockmeta_slot
-                        .store(block_meta.slot, std::sync::atomic::Ordering::Relaxed);
-                }
-                quic_geyser_common::message::Message::TransactionMsg(tx) => {
-                    log::trace!(
-                        "got transaction notification: {}",
-                        tx.signatures[0].to_string()
-                    );
-                    client_stats
-                        .transaction_notifications
-                        .fetch_add(1, std::sync::atomic::Ordering::Relaxed);
-                }
-                quic_geyser_common::message::Message::BlockMsg(block) => {
-                    log::info!("got block notification of slot {}, number_of_transactions : {}, number_of_accounts: {}", block.meta.slot, block.get_transactions().unwrap().len(), block.get_accounts().unwrap().len());
-                    client_stats
-                        .block_notifications
-                        .fetch_add(1, std::sync::atomic::Ordering::Relaxed);
-                    client_stats
-                        .block_slot
-                        .store(block.meta.slot, std::sync::atomic::Ordering::Relaxed);
-                }
-                quic_geyser_common::message::Message::Filters(_) => {
-                    // Not supported
-                }
-                quic_geyser_common::message::Message::Ping => {
-                    // not supported
-                }
-            }
-        }
-        log::info!("breaking client thread");
-        break_thread.store(true, std::sync::atomic::Ordering::Relaxed);
-    });
-}
-
-async fn non_blocking(args: Args, client_stats: ClientStats, break_thread: Arc<AtomicBool>) {
+async fn run_client_non_blocking(
+    args: Args,
+    client_stats: ClientStats,
+    break_thread: Arc<AtomicBool>,
+) {
     println!("Connecting");
     let (client, mut reciever, _tasks) = Client::new(
         args.url,
@@ -371,11 +269,8 @@ pub async fn main() {
     let args = Args::parse();
     let rpc_url = args.rpc_url.clone();
     let break_thread = Arc::new(AtomicBool::new(false));
-    if args.blocking {
-        blocking(args, client_stats.clone(), break_thread.clone());
-    } else {
-        non_blocking(args, client_stats.clone(), break_thread.clone()).await;
-    }
+
+    run_client_non_blocking(args, client_stats.clone(), break_thread.clone()).await;
 
     if let Some(rpc_url) = rpc_url {
         let cluster_slot = client_stats.cluster_slot.clone();

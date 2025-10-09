@@ -1,6 +1,6 @@
 use clap::Parser;
 use cli::Args;
-use quic_geyser_blocking_client::client::Client;
+use jupnet_sdk::signature::Keypair;
 use quic_geyser_common::{
     channel_message::{AccountData, ChannelMessage},
     config::{CompressionParameters, ConfigQuicPlugin, QuicParameters},
@@ -12,31 +12,36 @@ use quic_geyser_server::quic_server::QuicServer;
 
 pub mod cli;
 
-pub fn main() -> anyhow::Result<()> {
+#[tokio::main]
+pub async fn main() -> anyhow::Result<()> {
     tracing_subscriber::fmt::init();
     let args = Args::parse();
 
-    let (client, message_channel) = Client::new(
-        args.source_url,
-        ConnectionParameters {
-            max_number_of_streams: args.max_number_of_streams_per_client,
-            recieve_window_size: args.recieve_window_size,
-            timeout_in_seconds: args.connection_timeout,
-            max_ack_delay: args.max_ack_delay,
-            ack_exponent: args.ack_exponent,
-            enable_gso: true,
-            enable_pacing: true,
-        },
-    )?;
+    let (client, mut message_channel, _tasks) =
+        quic_geyser_client::non_blocking::client::Client::new(
+            args.source_url,
+            ConnectionParameters {
+                max_number_of_streams: args.max_number_of_streams_per_client,
+                recieve_window_size: args.recieve_window_size,
+                timeout_in_seconds: args.connection_timeout,
+                max_ack_delay: args.max_ack_delay,
+                ack_exponent: args.ack_exponent,
+                enable_gso: true,
+                enable_pacing: true,
+            },
+        )
+        .await?;
 
     log::info!("Subscribing");
-    client.subscribe(vec![
-        Filter::AccountsAll,
-        Filter::TransactionsAll,
-        Filter::Slot,
-        Filter::BlockMeta,
-        Filter::BlockAll,
-    ])?;
+    client
+        .subscribe(vec![
+            Filter::AccountsAll,
+            Filter::TransactionsAll,
+            Filter::Slot,
+            Filter::BlockMeta,
+            Filter::BlockAll,
+        ])
+        .await?;
 
     let quic_config = ConfigQuicPlugin {
         address: parse_host_port(format!("[::]:{}", args.port).as_str()).unwrap(),
@@ -64,7 +69,7 @@ pub fn main() -> anyhow::Result<()> {
 
     let (server_sender, server_reciever) = std::sync::mpsc::channel::<ChannelMessage>();
     std::thread::spawn(move || {
-        let quic_server = QuicServer::new(quic_config).unwrap();
+        let quic_server = QuicServer::new(quic_config, Keypair::new()).unwrap();
         loop {
             match server_reciever.recv() {
                 Ok(channel_message) => {
@@ -81,7 +86,7 @@ pub fn main() -> anyhow::Result<()> {
         }
     });
 
-    while let Ok(message) = message_channel.recv() {
+    while let Some(message) = message_channel.recv().await {
         let channel_message = match message {
             quic_geyser_common::message::Message::AccountMsg(account_message) => {
                 ChannelMessage::Account(

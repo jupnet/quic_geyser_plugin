@@ -1,11 +1,12 @@
+use jupnet_sdk::signature::Keypair;
 use quic_geyser_common::{
     channel_message::ChannelMessage, config::ConfigQuicPlugin, plugin_error::QuicGeyserError,
 };
 use std::fmt::Debug;
 
-use super::quiche_server_loop::server_loop;
+use super::quinn_server_loop::server_loop;
 pub struct QuicServer {
-    pub data_channel_sender: mio_channel::Sender<ChannelMessage>,
+    pub data_channel_sender: tokio::sync::broadcast::Sender<ChannelMessage>,
     pub quic_plugin_config: ConfigQuicPlugin,
     _server_loop_jh: std::thread::JoinHandle<()>,
 }
@@ -17,16 +18,22 @@ impl Debug for QuicServer {
 }
 
 impl QuicServer {
-    pub fn new(config: ConfigQuicPlugin) -> anyhow::Result<Self> {
+    pub fn new(config: ConfigQuicPlugin, keypair: Keypair) -> anyhow::Result<Self> {
         let socket = config.address;
         let compression_type = config.compression_parameters.compression_type;
         let quic_parameters = config.quic_parameters.clone();
 
-        let (data_channel_sender, data_channel_tx) = mio_channel::channel();
+        // channel for 32k messages
+        let (data_channel_sender, data_channel_tx) = tokio::sync::broadcast::channel(32 * 1024);
 
         let _server_loop_jh = std::thread::spawn(move || {
-            if let Err(e) = server_loop(quic_parameters, socket, data_channel_tx, compression_type)
-            {
+            if let Err(e) = server_loop(
+                keypair,
+                quic_parameters,
+                socket,
+                data_channel_tx,
+                compression_type,
+            ) {
                 panic!("Server loop closed by error : {e}");
             }
         });
@@ -41,6 +48,7 @@ impl QuicServer {
     pub fn send_message(&self, message: ChannelMessage) -> Result<(), QuicGeyserError> {
         self.data_channel_sender
             .send(message)
-            .map_err(|_| QuicGeyserError::MessageChannelClosed)
+            .map_err(|_| QuicGeyserError::MessageChannelClosed)?;
+        Ok(())
     }
 }

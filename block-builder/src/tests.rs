@@ -1,11 +1,6 @@
-use std::{
-    collections::HashMap,
-    sync::mpsc::{channel, TryRecvError},
-    thread::sleep,
-    time::Duration,
-    vec,
-};
+use std::{collections::HashMap, thread::sleep, time::Duration, vec};
 
+use crate::block_builder::start_block_building_thread;
 use itertools::Itertools;
 use jupnet_sdk::{
     account::Account,
@@ -22,13 +17,12 @@ use quic_geyser_common::{
         transaction::{Transaction, TransactionMeta},
     },
 };
-
-use crate::block_builder::start_block_building_thread;
+use tokio::sync::broadcast::error::TryRecvError;
 
 #[test]
 fn test_block_creation_transactions_after_blockmeta() {
-    let (channelmsg_sx, cm_rx) = channel();
-    let (ms_sx, msg_rx) = mio_channel::channel();
+    let (channelmsg_sx, cm_rx) = tokio::sync::mpsc::unbounded_channel();
+    let (ms_sx, mut msg_rx) = tokio::sync::broadcast::channel(1024);
     start_block_building_thread(
         cm_rx,
         ms_sx,
@@ -241,8 +235,8 @@ fn test_block_creation_transactions_after_blockmeta() {
 
 #[test]
 fn test_block_creation_blockmeta_after_transactions() {
-    let (channelmsg_sx, cm_rx) = channel();
-    let (ms_sx, msg_rx) = mio_channel::channel();
+    let (channelmsg_sx, cm_rx) = tokio::sync::mpsc::unbounded_channel();
+    let (ms_sx, mut msg_rx) = tokio::sync::broadcast::channel(1024);
     start_block_building_thread(
         cm_rx,
         ms_sx,
@@ -456,8 +450,8 @@ fn test_block_creation_blockmeta_after_transactions() {
 
 #[test]
 fn test_block_creation_incomplete_block_after_slot_notification() {
-    let (channelmsg_sx, cm_rx) = channel();
-    let (ms_sx, msg_rx) = mio_channel::channel();
+    let (channelmsg_sx, cm_rx) = tokio::sync::mpsc::unbounded_channel();
+    let (ms_sx, mut msg_rx) = tokio::sync::broadcast::channel(1024);
     start_block_building_thread(
         cm_rx,
         ms_sx,
@@ -670,8 +664,8 @@ fn test_block_creation_incomplete_block_after_slot_notification() {
 
 #[test]
 fn test_block_creation_incomplete_slot() {
-    let (channelmsg_sx, cm_rx) = channel();
-    let (ms_sx, msg_rx) = mio_channel::channel();
+    let (channelmsg_sx, cm_rx) = tokio::sync::mpsc::unbounded_channel();
+    let (ms_sx, mut msg_rx) = tokio::sync::broadcast::channel(1024);
     start_block_building_thread(
         cm_rx,
         ms_sx,

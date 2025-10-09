@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 jupnet-sdk = { workspace = true }
 jupnet-transaction-status = { workspace = true }
+jupnet-streamer = { workspace = true }
 
 serde = { workspace = true }
 anyhow = { workspace = true }
@@ -13,13 +14,11 @@ log = { workspace = true }
 thiserror = {workspace = true}
 itertools = { workspace = true }
 bincode = { workspace = true }
-ring = {workspace = true}
-quiche = { workspace = true, features = ["boringssl-boring-crate"] }
-quic-geyser-quiche-utils = { workspace = true }
-rcgen = { workspace = true }
-boring = { workspace = true }
-mio = { workspace = true }
-mio_channel = { workspace = true }
+quinn = { workspace = true }
+quinn-proto = { workspace = true }
+tokio = { workspace = true }
+pem = { workspace = true }
+rustls = { workspace = true }
 
 quic-geyser-common = { workspace = true }
 

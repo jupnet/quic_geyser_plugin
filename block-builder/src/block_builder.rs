@@ -1,7 +1,4 @@
-use std::{
-    collections::{BTreeMap, HashMap},
-    sync::mpsc::Receiver,
-};
+use std::collections::{BTreeMap, HashMap};
 
 use itertools::Itertools;
 use jupnet_sdk::pubkey::Pubkey;
@@ -13,20 +10,22 @@ use quic_geyser_common::{
         transaction::Transaction,
     },
 };
+use tokio::sync::mpsc::UnboundedReceiver;
 
 pub fn start_block_building_thread(
-    channel_messages: Receiver<ChannelMessage>,
-    output: mio_channel::Sender<ChannelMessage>,
+    channel_messages: UnboundedReceiver<ChannelMessage>,
+    output: tokio::sync::broadcast::Sender<ChannelMessage>,
     compression_type: CompressionType,
     build_blocks_with_accounts: bool,
 ) {
-    std::thread::spawn(move || {
+    tokio::spawn(async move {
         build_blocks(
             channel_messages,
             output,
             compression_type,
             build_blocks_with_accounts,
-        );
+        )
+        .await
     });
 }
 
@@ -37,14 +36,14 @@ struct PartialBlock {
     account_updates: HashMap<Pubkey, AccountData>,
 }
 
-pub fn build_blocks(
-    channel_messages: Receiver<ChannelMessage>,
-    output: mio_channel::Sender<ChannelMessage>,
+pub async fn build_blocks(
+    mut channel_messages: UnboundedReceiver<ChannelMessage>,
+    output: tokio::sync::broadcast::Sender<ChannelMessage>,
     compression_type: CompressionType,
     build_blocks_with_accounts: bool,
 ) {
     let mut partially_build_blocks = BTreeMap::<u64, PartialBlock>::new();
-    while let Ok(channel_message) = channel_messages.recv() {
+    while let Some(channel_message) = channel_messages.recv().await {
         match channel_message {
             ChannelMessage::Account(account_data, slot, init) => {
                 if init {
@@ -177,7 +176,7 @@ pub fn build_blocks(
 fn dispatch_partial_block(
     partial_blocks: &mut BTreeMap<u64, PartialBlock>,
     slot: u64,
-    output: &mio_channel::Sender<ChannelMessage>,
+    output: &tokio::sync::broadcast::Sender<ChannelMessage>,
     compression_type: CompressionType,
 ) {
     if let Some(dispatched_partial_block) = partial_blocks.remove(&slot) {

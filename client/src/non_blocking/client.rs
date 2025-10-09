@@ -1,4 +1,7 @@
 use anyhow::bail;
+use jupnet_quic_client::nonblocking::quic_client::SkipServerVerification;
+use jupnet_sdk::signer::keypair::Keypair;
+use jupnet_streamer::tls_certificates::new_dummy_x509_certificate;
 use quic_geyser_common::defaults::ALPN_GEYSER_PROTOCOL_ID;
 use quic_geyser_common::defaults::DEFAULT_MAX_RECIEVE_WINDOW_SIZE;
 use quic_geyser_common::defaults::MAX_PAYLOAD_BUFFER;
@@ -6,6 +9,7 @@ use quic_geyser_common::filters::Filter;
 use quic_geyser_common::message::Message;
 use quic_geyser_common::net::parse_host_port;
 use quic_geyser_common::types::connections_parameters::ConnectionParameters;
+use quinn::crypto::rustls::QuicClientConfig;
 use quinn::{
     ClientConfig, ConnectionError, Endpoint, EndpointConfig, IdleTimeout, RecvStream, SendStream,
     TokioRuntime, TransportConfig, VarInt,
@@ -15,7 +19,8 @@ use std::sync::Arc;
 use std::time::Duration;
 use tokio::io::AsyncWriteExt;
 
-pub fn create_client_endpoint(connection_parameters: ConnectionParameters) -> Endpoint {
+fn create_endpoint(connection_parameters: ConnectionParameters, keypair: &Keypair) -> Endpoint {
+    let (cert, priv_key) = new_dummy_x509_certificate(&keypair);
     let mut endpoint = {
         let client_socket = UdpSocket::bind(parse_host_port("[::]:0").unwrap())
             .expect("Client socket should be binded");
@@ -27,20 +32,15 @@ pub fn create_client_endpoint(connection_parameters: ConnectionParameters) -> En
             .expect("create_endpoint quinn::Endpoint::new")
     };
 
-    let cert = rcgen::generate_simple_self_signed(vec!["quic_geyser_client".into()]).unwrap();
-    let key = rustls::PrivateKey(cert.serialize_private_key_der());
-    let cert = rustls::Certificate(cert.serialize_der().unwrap());
-
     let mut crypto = rustls::ClientConfig::builder()
-        .with_safe_defaults()
-        .with_custom_certificate_verifier(Arc::new(ClientSkipServerVerification {}))
-        .with_client_auth_cert(vec![cert], key)
-        .expect("Should create client config");
-
+        .dangerous()
+        .with_custom_certificate_verifier(SkipServerVerification::new())
+        .with_client_auth_cert(vec![cert], priv_key)
+        .expect("Failed to set QUIC client certificates");
     crypto.enable_early_data = true;
     crypto.alpn_protocols = vec![ALPN_GEYSER_PROTOCOL_ID.to_vec()];
 
-    let mut config = ClientConfig::new(Arc::new(crypto));
+    let mut config = ClientConfig::new(Arc::new(QuicClientConfig::try_from(crypto).unwrap()));
     let mut transport_config = TransportConfig::default();
 
     let timeout = IdleTimeout::try_from(Duration::from_secs(
@@ -58,7 +58,9 @@ pub fn create_client_endpoint(connection_parameters: ConnectionParameters) -> En
     transport_config.crypto_buffer_size(64 * 1024);
     transport_config
         .receive_window(VarInt::from_u64(connection_parameters.recieve_window_size).unwrap());
-    transport_config.stream_receive_window(VarInt::from_u64(10 * 1024 * 1024).unwrap());
+    transport_config.stream_receive_window(VarInt::from_u64(64 * 1024 * 1024).unwrap());
+
+    transport_config.enable_segmentation_offload(connection_parameters.enable_gso);
 
     config.transport_config(Arc::new(transport_config));
 
@@ -105,7 +107,8 @@ impl Client {
         tokio::sync::mpsc::UnboundedReceiver<Message>,
         Vec<tokio::task::JoinHandle<anyhow::Result<()>>>,
     )> {
-        let endpoint = create_client_endpoint(connection_parameters);
+        let keypair = Keypair::new();
+        let endpoint = create_endpoint(connection_parameters, &keypair);
         let socket_addr = parse_host_port(&server_address)?;
         let connecting = endpoint.connect(socket_addr, "quic_geyser_client")?;
 
@@ -217,32 +220,10 @@ impl Client {
     }
 }
 
-pub struct ClientSkipServerVerification;
-
-impl ClientSkipServerVerification {
-    pub fn new() -> Arc<Self> {
-        Arc::new(Self)
-    }
-}
-
-impl rustls::client::ServerCertVerifier for ClientSkipServerVerification {
-    fn verify_server_cert(
-        &self,
-        _end_entity: &rustls::Certificate,
-        _intermediates: &[rustls::Certificate],
-        _server_name: &rustls::ServerName,
-        _scts: &mut dyn Iterator<Item = &[u8]>,
-        _ocsp_response: &[u8],
-        _now: std::time::SystemTime,
-    ) -> Result<rustls::client::ServerCertVerified, rustls::Error> {
-        Ok(rustls::client::ServerCertVerified::assertion())
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use itertools::Itertools;
-    use jupnet_sdk::pubkey::Pubkey;
+    use jupnet_sdk::{pubkey::Pubkey, signature::Keypair};
     use quic_geyser_common::{
         channel_message::AccountData,
         compression::CompressionType,
@@ -310,7 +291,7 @@ mod tests {
                     enable_block_builder: false,
                     build_blocks_with_accounts: false,
                 };
-                let quic_server = QuicServer::new(config).unwrap();
+                let quic_server = QuicServer::new(config, Keypair::new()).unwrap();
                 // wait for client to connect and subscribe
                 sleep(Duration::from_secs(2));
                 for msg in msgs {

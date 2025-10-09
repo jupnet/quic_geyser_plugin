@@ -1,6 +1,7 @@
 use clap::Parser;
 use cli::Args;
 use itertools::Itertools;
+use jupnet_sdk::signature::Keypair;
 use jupnet_sdk::{account::Account, pubkey::Pubkey};
 use quic_geyser_common::{
     channel_message::{AccountData, ChannelMessage},
@@ -33,7 +34,7 @@ pub fn main() {
         enable_block_builder: false,
         build_blocks_with_accounts: false,
     };
-    let quic_server = QuicServer::new(config).unwrap();
+    let quic_server = QuicServer::new(config, Keypair::new()).unwrap();
     // to avoid errors
     std::thread::sleep(Duration::from_millis(500));
 
