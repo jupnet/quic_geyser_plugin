@@ -1,4 +1,4 @@
-use std::{collections::HashMap, thread::sleep, time::Duration, vec};
+use std::{collections::HashMap, time::Duration, vec};
 
 use crate::block_builder::start_block_building_thread;
 use itertools::Itertools;
@@ -208,7 +208,7 @@ async fn test_block_creation_transactions_after_blockmeta() {
         .send(ChannelMessage::Transaction(Box::new(tx3.clone())))
         .unwrap();
 
-    sleep(Duration::from_millis(1));
+    tokio::time::sleep(Duration::from_millis(100)).await;
     let block_message = msg_rx.try_recv().unwrap();
     let ChannelMessage::Block(block) = block_message else {
         unreachable!();
@@ -423,7 +423,7 @@ async fn test_block_creation_blockmeta_after_transactions() {
         .send(ChannelMessage::BlockMeta(block_meta.clone()))
         .unwrap();
 
-    sleep(Duration::from_millis(1));
+    tokio::time::sleep(Duration::from_millis(1)).await;
     let block_message = msg_rx.try_recv().unwrap();
     let ChannelMessage::Block(block) = block_message else {
         unreachable!();
@@ -637,7 +637,7 @@ async fn test_block_creation_incomplete_block_after_slot_notification() {
         .send(ChannelMessage::Transaction(Box::new(tx3.clone())))
         .unwrap();
 
-    sleep(Duration::from_millis(1));
+    tokio::time::sleep(Duration::from_millis(1)).await;
     let block_message = msg_rx.try_recv().unwrap();
     let ChannelMessage::Block(block) = block_message else {
         unreachable!();
@@ -855,12 +855,12 @@ async fn test_block_creation_incomplete_slot() {
         .send(ChannelMessage::Transaction(Box::new(tx3.clone())))
         .unwrap();
 
-    sleep(Duration::from_millis(1));
+    tokio::time::sleep(Duration::from_millis(1)).await;
     assert_eq!(msg_rx.try_recv(), Err(TryRecvError::Empty));
     channelmsg_sx
         .send(ChannelMessage::Slot(5, 4, SlotStatus::Finalized))
         .unwrap();
-    sleep(Duration::from_millis(1));
+    tokio::time::sleep(Duration::from_millis(1)).await;
 
     let block_message = msg_rx.try_recv().unwrap();
     let ChannelMessage::Block(block) = block_message else {

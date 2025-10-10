@@ -276,12 +276,14 @@ pub async fn main() {
         let cluster_slot = client_stats.cluster_slot.clone();
         let rpc = RpcClient::new(rpc_url);
         let mut last_slot = 0;
-        std::thread::spawn(move || loop {
-            sleep(Duration::from_millis(200));
-            if let Ok(slot) = rpc.get_slot_with_commitment(CommitmentConfig::processed()) {
-                if last_slot < slot {
-                    last_slot = slot;
-                    cluster_slot.store(slot, std::sync::atomic::Ordering::Relaxed);
+        tokio::spawn(async move {
+            loop {
+                sleep(Duration::from_millis(200));
+                if let Ok(slot) = rpc.get_slot_with_commitment(CommitmentConfig::processed()) {
+                    if last_slot < slot {
+                        last_slot = slot;
+                        cluster_slot.store(slot, std::sync::atomic::Ordering::Relaxed);
+                    }
                 }
             }
         });

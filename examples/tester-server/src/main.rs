@@ -14,7 +14,8 @@ use std::time::Duration;
 
 pub mod cli;
 
-pub fn main() -> anyhow::Result<()> {
+#[tokio::main]
+pub async fn main() -> anyhow::Result<()> {
     let runtime = tokio::runtime::Runtime::new().unwrap();
     tracing_subscriber::fmt::init();
     let args = Args::parse();
@@ -37,7 +38,7 @@ pub fn main() -> anyhow::Result<()> {
     };
     let quic_server = QuicServer::new(config, Keypair::new(), &runtime).unwrap();
     // to avoid errors
-    std::thread::sleep(Duration::from_millis(500));
+    tokio::time::sleep(Duration::from_millis(500)).await;
 
     let mut slot = 4;
     let mut write_version = 1;
@@ -106,7 +107,7 @@ pub fn main() -> anyhow::Result<()> {
             let channel_message = ChannelMessage::Account(account, slot, false);
             quic_server.send_message(channel_message).unwrap();
             if i % 1000 == 0 {
-                std::thread::sleep(Duration::from_nanos(sleep_time_in_nanos));
+                tokio::time::sleep(Duration::from_nanos(sleep_time_in_nanos)).await;
             }
         }
     }
