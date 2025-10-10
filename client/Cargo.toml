@@ -15,8 +15,6 @@ anyhow = { workspace = true }
 log = { workspace = true }
 quinn = { workspace = true }
 rustls = { workspace = true }
-rcgen = { workspace = true }
-pkcs8 = { workspace = true }
 
 quic-geyser-common = { workspace = true }
 bincode = { workspace = true }

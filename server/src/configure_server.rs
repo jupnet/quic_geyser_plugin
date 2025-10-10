@@ -39,7 +39,7 @@ pub(crate) fn configure_server(
     config.max_concurrent_uni_streams((1 as u32).into());
     config.stream_receive_window((quic_parameters.recieve_window_size as u32).into());
     config.crypto_buffer_size(64 * 1024); // 64 Kbs
-    config.send_window(32 * 1024 * 1024); // 32 MBs
+    config.send_window(24 * 1024 * 1024); // 24 MBs
     config.enable_segmentation_offload(quic_parameters.enable_gso);
     // for getting 64 transasction streams in parallel
     config.receive_window((quic_parameters.recieve_window_size as u32).into());

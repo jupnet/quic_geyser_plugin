@@ -4,10 +4,12 @@ use jupnet_sdk::signer::keypair::Keypair;
 use jupnet_streamer::tls_certificates::new_dummy_x509_certificate;
 use quic_geyser_common::defaults::ALPN_GEYSER_PROTOCOL_ID;
 use quic_geyser_common::defaults::DEFAULT_MAX_RECIEVE_WINDOW_SIZE;
+use quic_geyser_common::defaults::MAX_DATAGRAM_SIZE;
 use quic_geyser_common::defaults::MAX_PAYLOAD_BUFFER;
 use quic_geyser_common::filters::Filter;
 use quic_geyser_common::message::Message;
 use quic_geyser_common::net::parse_host_port;
+use quic_geyser_common::stream_manager::StreamBuffer;
 use quic_geyser_common::types::connections_parameters::ConnectionParameters;
 use quinn::crypto::rustls::QuicClientConfig;
 use quinn::{
@@ -98,6 +100,8 @@ pub async fn send_message(send_stream: &mut SendStream, message: &Message) -> an
     Ok(())
 }
 
+const MAX_BUFFER_SIZE: usize = 10 * 1024 * 1024;
+
 impl Client {
     pub async fn new(
         server_address: String,
@@ -129,26 +133,24 @@ impl Client {
                         Ok(mut recv_stream) => {
                             let message_sx_queue = message_sx_queue.clone();
                             tokio::spawn(async move {
-                                let mut buffer: Vec<u8> = vec![];
+                                let mut buffer = StreamBuffer::<MAX_BUFFER_SIZE>::new();
                                 'read_loop: loop {
-                                    match recv_stream
-                                        .read_chunk(DEFAULT_MAX_RECIEVE_WINDOW_SIZE as usize, true)
-                                        .await
-                                    {
+                                    match recv_stream.read_chunk(MAX_DATAGRAM_SIZE, true).await {
                                         Ok(Some(chunk)) => {
-                                            buffer.extend_from_slice(&chunk.bytes);
+                                            buffer.append_bytes(&chunk.bytes);
                                             while let Some((message, size)) =
-                                                Message::from_binary_stream(&buffer)
+                                                Message::from_binary_stream(&buffer.as_buffer())
                                             {
                                                 if let Err(e) = message_sx_queue.send(message) {
                                                     log::error!("Message sent error : {:?}", e);
                                                     break 'read_loop;
                                                 }
-                                                buffer.drain(..size);
+                                                buffer.consume(size);
                                             }
                                         }
                                         Ok(None) => {
-                                            log::warn!("Chunk none");
+                                            log::warn!("Connection closed, by client");
+                                            break;
                                         }
                                         Err(e) => {
                                             log::debug!("Error getting message {:?}", e);
