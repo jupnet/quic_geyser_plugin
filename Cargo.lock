@@ -7734,7 +7734,6 @@ dependencies = [
  "git-version",
  "itertools 0.10.5",
  "jsonrpsee 0.20.4",
- "jupnet-account-decoder",
  "jupnet-logger",
  "jupnet-rpc-client-api",
  "jupnet-sdk",

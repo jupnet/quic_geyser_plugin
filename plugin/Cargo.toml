@@ -21,7 +21,6 @@ jupnet-sdk = { workspace = true }
 jupnet-logger = { workspace = true }
 serde_json = { workspace = true }
 jupnet-rpc-client-api = { workspace = true }
-jupnet-account-decoder = { workspace = true }
 
 anyhow = { workspace = true }
 log = { workspace = true }
