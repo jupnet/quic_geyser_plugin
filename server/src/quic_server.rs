@@ -8,7 +8,7 @@ use super::quinn_server_loop::server_loop;
 pub struct QuicServer {
     pub data_channel_sender: tokio::sync::broadcast::Sender<ChannelMessage>,
     pub quic_plugin_config: ConfigQuicPlugin,
-    _server_loop_jh: std::thread::JoinHandle<()>,
+    _server_loop_jh: tokio::task::JoinHandle<()>,
 }
 
 impl Debug for QuicServer {
@@ -18,7 +18,11 @@ impl Debug for QuicServer {
 }
 
 impl QuicServer {
-    pub fn new(config: ConfigQuicPlugin, keypair: Keypair) -> anyhow::Result<Self> {
+    pub fn new(
+        config: ConfigQuicPlugin,
+        keypair: Keypair,
+        runtime: &tokio::runtime::Runtime,
+    ) -> anyhow::Result<Self> {
         let socket = config.address;
         let compression_type = config.compression_parameters.compression_type;
         let quic_parameters = config.quic_parameters.clone();
@@ -26,14 +30,16 @@ impl QuicServer {
         // channel for 32k messages
         let (data_channel_sender, data_channel_tx) = tokio::sync::broadcast::channel(32 * 1024);
 
-        let _server_loop_jh = std::thread::spawn(move || {
+        let _server_loop_jh = runtime.spawn(async move {
             if let Err(e) = server_loop(
                 keypair,
                 quic_parameters,
                 socket,
                 data_channel_tx,
                 compression_type,
-            ) {
+            )
+            .await
+            {
                 panic!("Server loop closed by error : {e}");
             }
         });

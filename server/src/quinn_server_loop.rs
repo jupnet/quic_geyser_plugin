@@ -26,7 +26,7 @@ use crate::configure_server::configure_server;
 
 const MAX_NB_OF_MESSAGES: usize = 1_000_000;
 
-pub fn server_loop(
+pub async fn server_loop(
     keypair: Keypair,
     quic_parameters: QuicParameters,
     socket: SocketAddr,

@@ -134,8 +134,8 @@ mod tests {
 
     // asserts are more readable like this
     #[allow(clippy::bool_assert_comparison)]
-    #[test]
-    fn test_accounts_filter() {
+    #[tokio::test]
+    async fn test_accounts_filter() {
         let owner = Pubkey::new_unique();
 
         let owner_2 = Pubkey::new_unique();

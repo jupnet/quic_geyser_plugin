@@ -23,6 +23,7 @@ pub struct QuicGeyserPlugin {
     quic_server: Option<QuicServer>,
     block_builder_channel: Option<tokio::sync::mpsc::UnboundedSender<ChannelMessage>>,
     rpc_server_message_channel: Option<std::sync::mpsc::Sender<ChannelMessage>>,
+    runtime: Option<tokio::runtime::Runtime>,
 }
 
 impl GeyserPlugin for QuicGeyserPlugin {
@@ -44,9 +45,14 @@ impl GeyserPlugin for QuicGeyserPlugin {
         let build_blocks_with_accounts = config.quic_plugin.build_blocks_with_accounts;
         log::info!("Quic plugin config correctly loaded");
         jupnet_logger::setup_with_default(&config.quic_plugin.log_level);
-        let quic_server = QuicServer::new(config.quic_plugin, Keypair::new()).map_err(|_| {
-            GeyserPluginError::Custom(Box::new(QuicGeyserError::ErrorConfiguringServer))
-        })?;
+
+        let mut builder = tokio::runtime::Builder::new_multi_thread();
+        let runtime = builder.build().unwrap();
+
+        let quic_server =
+            QuicServer::new(config.quic_plugin, Keypair::new(), &runtime).map_err(|_| {
+                GeyserPluginError::Custom(Box::new(QuicGeyserError::ErrorConfiguringServer))
+            })?;
         if enable_block_builder {
             // disable block building for now
             let (sx, rx) = tokio::sync::mpsc::unbounded_channel();
@@ -60,12 +66,17 @@ impl GeyserPlugin for QuicGeyserPlugin {
         }
 
         self.quic_server = Some(quic_server);
+        self.runtime = Some(runtime);
         log::info!("geyser plugin loaded ok ()");
         Ok(())
     }
 
     fn on_unload(&mut self) {
         self.quic_server = None;
+        if let Some(runtime) = self.runtime.take() {
+            runtime.shutdown_background();
+        }
+        self.runtime = None;
     }
 
     fn update_account(

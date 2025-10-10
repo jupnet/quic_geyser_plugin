@@ -14,7 +14,8 @@ use std::time::Duration;
 
 pub mod cli;
 
-pub fn main() {
+pub fn main() -> anyhow::Result<()> {
+    let runtime = tokio::runtime::Runtime::new().unwrap();
     tracing_subscriber::fmt::init();
     let args = Args::parse();
 
@@ -34,7 +35,7 @@ pub fn main() {
         enable_block_builder: false,
         build_blocks_with_accounts: false,
     };
-    let quic_server = QuicServer::new(config, Keypair::new()).unwrap();
+    let quic_server = QuicServer::new(config, Keypair::new(), &runtime).unwrap();
     // to avoid errors
     std::thread::sleep(Duration::from_millis(500));
 

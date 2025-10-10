@@ -19,8 +19,10 @@ use quic_geyser_common::{
 };
 use tokio::sync::broadcast::error::TryRecvError;
 
-#[test]
-fn test_block_creation_transactions_after_blockmeta() {
+#[tokio::test]
+async fn test_block_creation_transactions_after_blockmeta() {
+    tracing_subscriber::fmt::init();
+
     let (channelmsg_sx, cm_rx) = tokio::sync::mpsc::unbounded_channel();
     let (ms_sx, mut msg_rx) = tokio::sync::broadcast::channel(1024);
     start_block_building_thread(
@@ -233,8 +235,8 @@ fn test_block_creation_transactions_after_blockmeta() {
     assert_eq!(hash_map_accounts, accounts_sent);
 }
 
-#[test]
-fn test_block_creation_blockmeta_after_transactions() {
+#[tokio::test]
+async fn test_block_creation_blockmeta_after_transactions() {
     let (channelmsg_sx, cm_rx) = tokio::sync::mpsc::unbounded_channel();
     let (ms_sx, mut msg_rx) = tokio::sync::broadcast::channel(1024);
     start_block_building_thread(
@@ -448,8 +450,8 @@ fn test_block_creation_blockmeta_after_transactions() {
     assert_eq!(hash_map_accounts, accounts_sent);
 }
 
-#[test]
-fn test_block_creation_incomplete_block_after_slot_notification() {
+#[tokio::test]
+async fn test_block_creation_incomplete_block_after_slot_notification() {
     let (channelmsg_sx, cm_rx) = tokio::sync::mpsc::unbounded_channel();
     let (ms_sx, mut msg_rx) = tokio::sync::broadcast::channel(1024);
     start_block_building_thread(
@@ -662,8 +664,8 @@ fn test_block_creation_incomplete_block_after_slot_notification() {
     assert_eq!(hash_map_accounts, accounts_sent);
 }
 
-#[test]
-fn test_block_creation_incomplete_slot() {
+#[tokio::test]
+async fn test_block_creation_incomplete_slot() {
     let (channelmsg_sx, cm_rx) = tokio::sync::mpsc::unbounded_channel();
     let (ms_sx, mut msg_rx) = tokio::sync::broadcast::channel(1024);
     start_block_building_thread(

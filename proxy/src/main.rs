@@ -68,8 +68,9 @@ pub async fn main() -> anyhow::Result<()> {
     };
 
     let (server_sender, server_reciever) = std::sync::mpsc::channel::<ChannelMessage>();
-    std::thread::spawn(move || {
-        let quic_server = QuicServer::new(quic_config, Keypair::new()).unwrap();
+    tokio::spawn(async move {
+        let runtime = tokio::runtime::Runtime::new().unwrap();
+        let quic_server = QuicServer::new(quic_config, Keypair::new(), &runtime).unwrap();
         loop {
             match server_reciever.recv() {
                 Ok(channel_message) => {

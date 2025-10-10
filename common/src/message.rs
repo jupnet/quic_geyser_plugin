@@ -119,8 +119,8 @@ mod tests {
         }
     }
 
-    #[test]
-    pub fn check_slot_message_size() {
+    #[tokio::test]
+    async fn check_slot_message_size() {
         let message = Message::SlotMsg(SlotMeta {
             slot: 73282,
             parent: 8392983,
@@ -130,8 +130,8 @@ mod tests {
         assert_eq!(binary.len(), 32);
     }
 
-    #[test]
-    pub fn from_to_binary_stream() {
+    #[tokio::test]
+    async fn from_to_binary_stream() {
         let message = Message::SlotMsg(SlotMeta {
             slot: 73282,
             parent: 8392983,

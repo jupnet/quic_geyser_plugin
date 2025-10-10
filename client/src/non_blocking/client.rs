@@ -237,7 +237,7 @@ mod tests {
         },
     };
     use quic_geyser_server::quic_server::QuicServer;
-    use std::{net::SocketAddr, thread::sleep, time::Duration};
+    use std::{net::SocketAddr, time::Duration};
 
     pub fn get_account_for_test(slot: u64, data_size: usize) -> Account {
         Account {
@@ -274,7 +274,8 @@ mod tests {
 
         let jh = {
             let msgs = msgs.clone();
-            std::thread::spawn(move || {
+            tokio::spawn(async move {
+                let runtime = tokio::runtime::Runtime::new().unwrap();
                 let config = ConfigQuicPlugin {
                     address: server_sock,
                     quic_parameters: QuicParameters {
@@ -291,9 +292,9 @@ mod tests {
                     enable_block_builder: false,
                     build_blocks_with_accounts: false,
                 };
-                let quic_server = QuicServer::new(config, Keypair::new()).unwrap();
+                let quic_server = QuicServer::new(config, Keypair::new(), &runtime).unwrap();
                 // wait for client to connect and subscribe
-                sleep(Duration::from_secs(2));
+                tokio::time::sleep(Duration::from_secs(2)).await;
                 for msg in msgs {
                     log::info!("sending message");
                     let Message::AccountMsg(account) = msg else {
@@ -313,11 +314,11 @@ mod tests {
                         )
                         .unwrap();
                 }
-                sleep(Duration::from_secs(1));
+                tokio::time::sleep(Duration::from_secs(1)).await;
             })
         };
         // wait for server to start
-        sleep(Duration::from_millis(10));
+        tokio::time::sleep(Duration::from_millis(10)).await;
 
         // server started
         let (client, mut reciever, _tasks) = Client::new(
@@ -338,13 +339,13 @@ mod tests {
         log::info!("subscribing");
         client.subscribe(vec![Filter::AccountsAll]).await.unwrap();
         log::info!("subscribed");
-        sleep(Duration::from_millis(100));
+        tokio::time::sleep(Duration::from_millis(100)).await;
 
         for (cnt, message_sent) in msgs.iter().enumerate() {
             let msg = reciever.recv().await.unwrap();
             log::info!("got message : {}", cnt);
             assert_eq!(*message_sent, msg);
         }
-        jh.join().unwrap();
+        let _ = jh.await;
     }
 }
