@@ -27,7 +27,6 @@ jupnet-transaction-status = { git = "https://github.com/jupnet/jupnet-svm.git", 
 jupnet-logger = { git = "https://github.com/jupnet/jupnet-svm.git", branch = "v2.1" }
 jupnet-rpc-client = { git = "https://github.com/jupnet/jupnet-svm.git", branch = "v2.1" }
 jupnet-rpc-client-api = { git = "https://github.com/jupnet/jupnet-svm.git", branch = "v2.1" }
-jupnet-account-decoder = { git = "https://github.com/jupnet/jupnet-svm.git", branch = "v2.1" }
 agave-geyser-plugin-interface = { git = "https://github.com/jupnet/jupnet-svm.git", branch = "v2.1" }
 
 itertools = "0.10.5"
