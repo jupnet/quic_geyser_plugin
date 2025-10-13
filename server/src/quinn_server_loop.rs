@@ -255,11 +255,11 @@ fn create_sender(
             if let Some(channel_message) = message {
                 let message = channel_message_to_message(channel_message, compression_type);
                 if let Err(e) = stream.write_all(&message.to_binary_stream()).await {
-                    log::error!("Error while sending message : {e:?}");
+                    log::debug!("Error while sending message : {e:?}");
                     break;
                 }
                 if let Err(e) = stream.flush().await {
-                    log::error!("Error while flushing message : {e:?}");
+                    log::debug!("Error while flushing message : {e:?}");
                     break;
                 }
                 message_enqueued.fetch_sub(1, Ordering::Relaxed);
