@@ -4,7 +4,14 @@ use agave_geyser_plugin_interface::geyser_plugin_interface::{
     ReplicaEntryInfoVersions, ReplicaTransactionInfoVersions, Result as PluginResult, SlotStatus,
 };
 use jupnet_sdk::{
-    account::Account, clock::Slot, message::Message, pubkey::Pubkey, signature::Keypair,
+    account::Account,
+    clock::Slot,
+    message::{
+        SanitizedMessage::{Batched, Legacy},
+        VersionedMessage,
+    },
+    pubkey::Pubkey,
+    signature::Keypair,
 };
 use quic_geyser_block_builder::block_builder::start_block_building_thread;
 use quic_geyser_common::{
@@ -179,7 +186,7 @@ impl GeyserPlugin for QuicGeyserPlugin {
         };
         let ReplicaTransactionInfoVersions::V0_0_3(jupiter_transaction) = transaction;
 
-        let message = jupiter_transaction.transaction.message();
+        let message = jupiter_transaction.transaction.message().clone();
         let mut account_keys = vec![];
 
         for index in 0.. {
@@ -190,27 +197,37 @@ impl GeyserPlugin for QuicGeyserPlugin {
             }
         }
 
-        let legacy_message = if let Some(message) = message.to_legacy_message() {
-            message
-        } else {
-            return Err(GeyserPluginError::TransactionUpdateError {
-                msg: "Unsupported batched transactin".to_string(),
-            });
-        };
-
-        let message = Message {
-            header: legacy_message.message.header,
-            account_keys,
-            recent_blockhash: *message.recent_blockhash(),
-            instructions: legacy_message.message.instructions.to_vec(),
+        let batched_steps_meta = match message {
+            Legacy(_) => None,
+            Batched(_) => Some(
+                jupiter_transaction
+                    .batch_step_metas
+                    .iter()
+                    .map(|step| TransactionMeta {
+                        error: step.status.as_ref().err().cloned(),
+                        fee: step.fee,
+                        pre_balances: step.pre_balances.clone(),
+                        post_balances: step.post_balances.clone(),
+                        inner_instructions: step.inner_instructions.clone(),
+                        log_messages: step.log_messages.clone(),
+                        rewards: step.rewards.clone(),
+                        return_data: step.return_data.clone(),
+                        compute_units_consumed: Some(step.compute_units_consumed),
+                    })
+                    .collect(),
+            ),
         };
 
         let status_meta = jupiter_transaction.transaction_status_meta;
+        let versioned_message = match message {
+            Legacy(message) => VersionedMessage::Legacy((*message.message).clone()),
+            Batched(message) => VersionedMessage::Batched((*message.batched_message).clone()),
+        };
 
         let transaction = Transaction {
             slot_identifier: SlotIdentifier { slot },
             signatures: jupiter_transaction.transaction.signatures().to_vec(),
-            message,
+            message: versioned_message,
             is_vote: jupiter_transaction.is_vote,
             transasction_meta: TransactionMeta {
                 error: match &status_meta.status {
@@ -227,6 +244,7 @@ impl GeyserPlugin for QuicGeyserPlugin {
                 compute_units_consumed: Some(status_meta.compute_units_consumed),
             },
             index: jupiter_transaction.index as u64,
+            batched_steps_meta,
         };
 
         let transaction_message = ChannelMessage::Transaction(Box::new(transaction));

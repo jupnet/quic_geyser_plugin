@@ -3,7 +3,6 @@ use jupnet_quic_client::nonblocking::quic_client::SkipServerVerification;
 use jupnet_sdk::signer::keypair::Keypair;
 use jupnet_streamer::tls_certificates::new_dummy_x509_certificate;
 use quic_geyser_common::defaults::ALPN_GEYSER_PROTOCOL_ID;
-use quic_geyser_common::defaults::DEFAULT_MAX_RECIEVE_WINDOW_SIZE;
 use quic_geyser_common::defaults::MAX_DATAGRAM_SIZE;
 use quic_geyser_common::defaults::MAX_PAYLOAD_BUFFER;
 use quic_geyser_common::filters::Filter;

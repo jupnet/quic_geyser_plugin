@@ -1,5 +1,5 @@
 use jupnet_sdk::{
-    message::Message, signature::TypedSignature, transaction::TransactionError,
+    message::VersionedMessage, signature::TypedSignature, transaction::TransactionError,
     transaction_context::TransactionReturnData,
 };
 use jupnet_transaction_status::{InnerInstructions, Rewards};
@@ -26,8 +26,9 @@ pub struct TransactionMeta {
 pub struct Transaction {
     pub slot_identifier: SlotIdentifier,
     pub signatures: Vec<TypedSignature>,
-    pub message: Message,
+    pub message: VersionedMessage,
     pub is_vote: bool,
     pub transasction_meta: TransactionMeta,
     pub index: u64,
+    pub batched_steps_meta: Option<Vec<TransactionMeta>>,
 }
