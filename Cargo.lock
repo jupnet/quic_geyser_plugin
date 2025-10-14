@@ -97,7 +97,7 @@ dependencies = [
 [[package]]
 name = "agave-geyser-plugin-interface"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-sdk",
  "jupnet-transaction-status",
@@ -3925,7 +3925,7 @@ dependencies = [
 [[package]]
 name = "jpl-associated-token-account"
 version = "4.0.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "borsh 1.5.7",
  "jpl-associated-token-account-client",
@@ -3940,7 +3940,7 @@ dependencies = [
 [[package]]
 name = "jpl-associated-token-account-client"
 version = "1.0.0"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-program",
 ]
@@ -3948,7 +3948,7 @@ dependencies = [
 [[package]]
 name = "jpl-discriminator"
 version = "0.3.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "bytemuck",
  "jpl-discriminator-derive",
@@ -3958,7 +3958,7 @@ dependencies = [
 [[package]]
 name = "jpl-discriminator-derive"
 version = "0.2.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jpl-discriminator-syn",
  "quote",
@@ -3968,7 +3968,7 @@ dependencies = [
 [[package]]
 name = "jpl-discriminator-syn"
 version = "0.2.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -3980,7 +3980,7 @@ dependencies = [
 [[package]]
 name = "jpl-math"
 version = "0.2.0"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "borsh 1.5.7",
  "jupnet-program",
@@ -3993,7 +3993,7 @@ dependencies = [
 [[package]]
 name = "jpl-memo"
 version = "5.0.0"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-program",
 ]
@@ -4001,7 +4001,7 @@ dependencies = [
 [[package]]
 name = "jpl-pod"
 version = "0.3.3"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "borsh 1.5.7",
  "bytemuck",
@@ -4015,7 +4015,7 @@ dependencies = [
 [[package]]
 name = "jpl-program-error"
 version = "0.5.0"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jpl-program-error-derive",
  "jupnet-program",
@@ -4027,7 +4027,7 @@ dependencies = [
 [[package]]
 name = "jpl-program-error-derive"
 version = "0.4.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -4038,7 +4038,7 @@ dependencies = [
 [[package]]
 name = "jpl-tlv-account-resolution"
 version = "0.7.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "bytemuck",
  "jpl-discriminator",
@@ -4051,7 +4051,7 @@ dependencies = [
 [[package]]
 name = "jpl-token"
 version = "6.0.0"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "arrayref",
  "bytemuck",
@@ -4066,7 +4066,7 @@ dependencies = [
 [[package]]
 name = "jpl-token-2022"
 version = "4.0.3-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "arrayref",
  "bytemuck",
@@ -4091,7 +4091,7 @@ dependencies = [
 [[package]]
 name = "jpl-token-group-interface"
 version = "0.3.0"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "bytemuck",
  "jpl-discriminator",
@@ -4103,7 +4103,7 @@ dependencies = [
 [[package]]
 name = "jpl-token-metadata-interface"
 version = "0.4.0"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "borsh 1.5.7",
  "jpl-discriminator",
@@ -4116,7 +4116,7 @@ dependencies = [
 [[package]]
 name = "jpl-transfer-hook-interface"
 version = "0.7.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "arrayref",
  "bytemuck",
@@ -4132,7 +4132,7 @@ dependencies = [
 [[package]]
 name = "jpl-type-length-value"
 version = "0.5.0"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "bytemuck",
  "jpl-discriminator",
@@ -4494,7 +4494,7 @@ dependencies = [
 [[package]]
 name = "jupnet-account"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "bincode",
  "jupnet-instruction",
@@ -4507,7 +4507,7 @@ dependencies = [
 [[package]]
 name = "jupnet-account-decoder"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "Inflector",
  "base64 0.22.1",
@@ -4535,7 +4535,7 @@ dependencies = [
 [[package]]
 name = "jupnet-account-decoder-client-types"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "base64 0.22.1",
  "bs58 0.5.1",
@@ -4551,7 +4551,7 @@ dependencies = [
 [[package]]
 name = "jupnet-account-info"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "bincode",
  "jupnet-program-error",
@@ -4563,7 +4563,7 @@ dependencies = [
 [[package]]
 name = "jupnet-alt-bn128-bls"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "ark-bn254",
  "ark-ec",
@@ -4579,7 +4579,7 @@ dependencies = [
 [[package]]
 name = "jupnet-atomic-u64"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "parking_lot",
 ]
@@ -4587,7 +4587,7 @@ dependencies = [
 [[package]]
 name = "jupnet-bincode"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "bincode",
  "jupnet-instruction",
@@ -4597,7 +4597,7 @@ dependencies = [
 [[package]]
 name = "jupnet-bls-sdk"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "dashu",
  "jupnet-alt-bn128-bls",
@@ -4612,7 +4612,7 @@ dependencies = [
 [[package]]
 name = "jupnet-bn254"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "ark-bn254",
  "ark-ec",
@@ -4626,7 +4626,7 @@ dependencies = [
 [[package]]
 name = "jupnet-borsh"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "borsh 0.10.4",
  "borsh 1.5.7",
@@ -4635,7 +4635,7 @@ dependencies = [
 [[package]]
 name = "jupnet-clock"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-sdk-macro",
  "jupnet-sysvar-id",
@@ -4646,7 +4646,7 @@ dependencies = [
 [[package]]
 name = "jupnet-compute-budget"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-sdk",
 ]
@@ -4654,7 +4654,7 @@ dependencies = [
 [[package]]
 name = "jupnet-config-program"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "bincode",
  "chrono",
@@ -4669,7 +4669,7 @@ dependencies = [
 [[package]]
 name = "jupnet-connection-cache"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "async-trait",
  "bincode",
@@ -4689,7 +4689,7 @@ dependencies = [
 [[package]]
 name = "jupnet-cpi"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-account-info",
  "jupnet-define-syscall",
@@ -4702,7 +4702,7 @@ dependencies = [
 [[package]]
 name = "jupnet-cross-chain-core-primitives"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "bincode",
  "crossbeam-channel",
@@ -4718,7 +4718,7 @@ dependencies = [
 [[package]]
 name = "jupnet-cross-chain-primitives"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "borsh 1.5.7",
  "ethnum",
@@ -4742,7 +4742,7 @@ dependencies = [
 [[package]]
 name = "jupnet-crypto"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "bytemuck",
  "dashu",
@@ -4756,7 +4756,7 @@ dependencies = [
 [[package]]
 name = "jupnet-curve25519"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "bytemuck",
  "bytemuck_derive",
@@ -4768,7 +4768,7 @@ dependencies = [
 [[package]]
 name = "jupnet-decode-error"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "num-traits",
 ]
@@ -4776,12 +4776,12 @@ dependencies = [
 [[package]]
 name = "jupnet-define-syscall"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 
 [[package]]
 name = "jupnet-derivation-path"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "derivation-path",
  "qstring",
@@ -4791,7 +4791,7 @@ dependencies = [
 [[package]]
 name = "jupnet-epoch-schedule"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-sdk-macro",
  "jupnet-sysvar-id",
@@ -4802,7 +4802,7 @@ dependencies = [
 [[package]]
 name = "jupnet-feature-set"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-clock",
  "jupnet-epoch-schedule",
@@ -4815,7 +4815,7 @@ dependencies = [
 [[package]]
 name = "jupnet-fee-calculator"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "log",
  "serde",
@@ -4825,7 +4825,7 @@ dependencies = [
 [[package]]
 name = "jupnet-hash"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "borsh 1.5.7",
  "bs58 0.5.1",
@@ -4842,7 +4842,7 @@ dependencies = [
 [[package]]
 name = "jupnet-inflation"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "serde",
  "serde_derive",
@@ -4851,7 +4851,7 @@ dependencies = [
 [[package]]
 name = "jupnet-inline-spl"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "bytemuck",
  "jupnet-pubkey",
@@ -4860,7 +4860,7 @@ dependencies = [
 [[package]]
 name = "jupnet-instruction"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "bincode",
  "borsh 1.5.7",
@@ -4877,7 +4877,7 @@ dependencies = [
 [[package]]
 name = "jupnet-last-restart-slot"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-sdk-macro",
  "jupnet-sysvar-id",
@@ -4888,7 +4888,7 @@ dependencies = [
 [[package]]
 name = "jupnet-log-collector"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "log",
 ]
@@ -4896,7 +4896,7 @@ dependencies = [
 [[package]]
 name = "jupnet-logger"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "env_logger",
  "lazy_static",
@@ -4906,12 +4906,12 @@ dependencies = [
 [[package]]
 name = "jupnet-measure"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 
 [[package]]
 name = "jupnet-metrics"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "crossbeam-channel",
  "env_logger",
@@ -4927,7 +4927,7 @@ dependencies = [
 [[package]]
 name = "jupnet-msg"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-define-syscall",
 ]
@@ -4935,12 +4935,12 @@ dependencies = [
 [[package]]
 name = "jupnet-native-token"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 
 [[package]]
 name = "jupnet-net-utils"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "bincode",
  "crossbeam-channel",
@@ -4958,7 +4958,7 @@ dependencies = [
 [[package]]
 name = "jupnet-packet"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "bincode",
  "bitflags 2.9.0",
@@ -4971,7 +4971,7 @@ dependencies = [
 [[package]]
 name = "jupnet-perf"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "ahash",
  "bincode",
@@ -4998,7 +4998,7 @@ dependencies = [
 [[package]]
 name = "jupnet-program"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "base64 0.22.1",
  "bincode",
@@ -5072,7 +5072,7 @@ dependencies = [
 [[package]]
 name = "jupnet-program-entrypoint"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-account-info",
  "jupnet-msg",
@@ -5083,7 +5083,7 @@ dependencies = [
 [[package]]
 name = "jupnet-program-error"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "borsh 1.5.7",
  "jupnet-decode-error",
@@ -5098,7 +5098,7 @@ dependencies = [
 [[package]]
 name = "jupnet-program-memory"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-define-syscall",
  "num-traits",
@@ -5107,12 +5107,12 @@ dependencies = [
 [[package]]
 name = "jupnet-program-option"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 
 [[package]]
 name = "jupnet-program-pack"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-program-error",
 ]
@@ -5120,7 +5120,7 @@ dependencies = [
 [[package]]
 name = "jupnet-program-runtime"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "base64 0.22.1",
  "bincode",
@@ -5149,7 +5149,7 @@ dependencies = [
 [[package]]
 name = "jupnet-pubkey"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "borsh 0.10.4",
  "borsh 1.5.7",
@@ -5175,7 +5175,7 @@ dependencies = [
 [[package]]
 name = "jupnet-quic-client"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "async-lock 3.4.1",
  "async-trait",
@@ -5200,7 +5200,7 @@ dependencies = [
 [[package]]
 name = "jupnet-rayon-threadlimit"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "lazy_static",
  "num_cpus",
@@ -5209,7 +5209,7 @@ dependencies = [
 [[package]]
 name = "jupnet-rent"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-sdk-macro",
  "jupnet-sysvar-id",
@@ -5220,7 +5220,7 @@ dependencies = [
 [[package]]
 name = "jupnet-rpc-client"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "async-trait",
  "base64 0.22.1",
@@ -5248,7 +5248,7 @@ dependencies = [
 [[package]]
 name = "jupnet-rpc-client-api"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "anyhow",
  "base64 0.22.1",
@@ -5271,16 +5271,17 @@ dependencies = [
 [[package]]
 name = "jupnet-sanitize"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 
 [[package]]
 name = "jupnet-sdk"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "base64-url",
  "bincode",
  "bitflags 2.9.0",
+ "blake3",
  "borsh 1.5.7",
  "bs58 0.5.1",
  "bytemuck",
@@ -5342,7 +5343,7 @@ dependencies = [
 [[package]]
 name = "jupnet-sdk-macro"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "bs58 0.5.1",
  "proc-macro2",
@@ -5353,7 +5354,7 @@ dependencies = [
 [[package]]
 name = "jupnet-secp256k1-recover"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "borsh 1.5.7",
  "jupnet-define-syscall",
@@ -5364,7 +5365,7 @@ dependencies = [
 [[package]]
 name = "jupnet-serde-varint"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "serde",
 ]
@@ -5372,7 +5373,7 @@ dependencies = [
 [[package]]
 name = "jupnet-serialize-utils"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-instruction",
  "jupnet-pubkey",
@@ -5382,7 +5383,7 @@ dependencies = [
 [[package]]
 name = "jupnet-sha256-hasher"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-define-syscall",
  "jupnet-hash",
@@ -5392,7 +5393,7 @@ dependencies = [
 [[package]]
 name = "jupnet-short-vec"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "serde",
 ]
@@ -5400,7 +5401,7 @@ dependencies = [
 [[package]]
 name = "jupnet-signature"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "base64-url",
  "bincode",
@@ -5425,7 +5426,7 @@ dependencies = [
 [[package]]
 name = "jupnet-slot-hashes"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-hash",
  "jupnet-sysvar-id",
@@ -5436,7 +5437,7 @@ dependencies = [
 [[package]]
 name = "jupnet-slot-history"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "bv",
  "jupnet-sysvar-id",
@@ -5447,7 +5448,7 @@ dependencies = [
 [[package]]
 name = "jupnet-stable-layout"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-instruction",
  "jupnet-pubkey",
@@ -5456,7 +5457,7 @@ dependencies = [
 [[package]]
 name = "jupnet-streamer"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "async-channel",
  "bytes",
@@ -5495,7 +5496,7 @@ dependencies = [
 [[package]]
 name = "jupnet-sysvar-id"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-pubkey",
 ]
@@ -5503,7 +5504,7 @@ dependencies = [
 [[package]]
 name = "jupnet-timings"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "eager",
  "enum-iterator",
@@ -5513,7 +5514,7 @@ dependencies = [
 [[package]]
 name = "jupnet-transaction-error"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-instruction",
  "jupnet-sanitize",
@@ -5524,7 +5525,7 @@ dependencies = [
 [[package]]
 name = "jupnet-transaction-metrics-tracker"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "base64 0.22.1",
  "bincode",
@@ -5539,7 +5540,7 @@ dependencies = [
 [[package]]
 name = "jupnet-transaction-status"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "Inflector",
  "base64 0.22.1",
@@ -5566,7 +5567,7 @@ dependencies = [
 [[package]]
 name = "jupnet-transaction-status-client-types"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "base64 0.22.1",
  "bincode",
@@ -5583,7 +5584,7 @@ dependencies = [
 [[package]]
 name = "jupnet-type-overrides"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "lazy_static",
  "rand 0.8.5",
@@ -5592,7 +5593,7 @@ dependencies = [
 [[package]]
 name = "jupnet-version"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "jupnet-feature-set",
  "jupnet-sanitize",
@@ -5605,7 +5606,7 @@ dependencies = [
 [[package]]
 name = "jupnet-vote"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "itertools 0.12.1",
  "jupnet-sdk",
@@ -5618,7 +5619,7 @@ dependencies = [
 [[package]]
 name = "jupnet-vote-program"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "bincode",
  "jupnet-feature-set",
@@ -5637,7 +5638,7 @@ dependencies = [
 [[package]]
 name = "jupnet-zk-sdk"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "aes-gcm-siv",
  "base64 0.22.1",
@@ -5668,7 +5669,7 @@ dependencies = [
 [[package]]
 name = "jupnet-zk-token-sdk"
 version = "2.1.6-jupnet.1"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "aes-gcm-siv",
  "base64 0.22.1",
@@ -6929,7 +6930,7 @@ dependencies = [
 [[package]]
 name = "p-shared-lib"
 version = "0.1.0"
-source = "git+https://github.com/jupnet/jupnet-svm.git?branch=v2.1#c38da846356784624a0b82785d836d445c30e85c"
+source = "git+https://github.com/jupnet/jupnet-svm.git?branch=gmg/batched_transaction_hash_calculated_from_signatures#7e278a2c0fe8d6a1eb88a883b0271d00675056b3"
 dependencies = [
  "borsh 1.5.7",
  "bytemuck",
