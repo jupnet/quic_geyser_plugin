@@ -281,6 +281,7 @@ mod tests {
                     address: server_sock,
                     quic_parameters: QuicParameters {
                         discover_pmtu: false,
+                        max_number_of_streams_per_client: 4,
                         ..Default::default()
                     },
                     compression_parameters: CompressionParameters {
@@ -315,7 +316,7 @@ mod tests {
                         )
                         .unwrap();
                 }
-                tokio::time::sleep(Duration::from_secs(1)).await;
+                tokio::time::sleep(Duration::from_secs(10)).await;
             })
         };
         // wait for server to start
@@ -347,6 +348,6 @@ mod tests {
             log::info!("got message : {}", cnt);
             assert_eq!(*message_sent, msg);
         }
-        let _ = jh.await;
+        jh.abort();
     }
 }
