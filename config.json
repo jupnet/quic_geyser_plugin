@@ -3,10 +3,10 @@
   "quic_plugin": {
     "address": "[::]:10900",
     "quic_parameters" : {
-        "disconnect_laggy_client" : false
+        "disconnect_laggy_client" : true
     },
     "compression_parameters": {
-        "compression_type": "None"
+        "compression_type": {"Lz4Fast":8}
       }
   }
 }
