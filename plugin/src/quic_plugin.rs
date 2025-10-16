@@ -54,7 +54,7 @@ impl GeyserPlugin for QuicGeyserPlugin {
         jupnet_logger::setup_with_default(&config.quic_plugin.log_level);
 
         let mut builder = tokio::runtime::Builder::new_multi_thread();
-        let runtime = builder.build().unwrap();
+        let runtime = builder.enable_all().build().unwrap();
 
         let quic_server =
             QuicServer::new(config.quic_plugin, Keypair::new(), &runtime).map_err(|_| {
@@ -129,9 +129,10 @@ impl GeyserPlugin for QuicGeyserPlugin {
             let _ = rpc_server_message_channel.send(channel_message.clone());
         }
 
-        quic_server
-            .send_message(channel_message)
-            .map_err(|e| GeyserPluginError::Custom(Box::new(e)))?;
+        quic_server.send_message(channel_message).map_err(|e| {
+            log::error!("Error sending account message: {}", e);
+            GeyserPluginError::Custom(Box::new(e))
+        })?;
         Ok(())
     }
 

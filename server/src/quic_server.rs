@@ -52,9 +52,10 @@ impl QuicServer {
     }
 
     pub fn send_message(&self, message: ChannelMessage) -> Result<(), QuicGeyserError> {
-        self.data_channel_sender
-            .send(message)
-            .map_err(|_| QuicGeyserError::MessageChannelClosed)?;
+        self.data_channel_sender.send(message).map_err(|e| {
+            log::error!("Error sending message: {}", e);
+            QuicGeyserError::MessageChannelClosed
+        })?;
         Ok(())
     }
 }

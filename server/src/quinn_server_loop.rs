@@ -44,6 +44,7 @@ pub async fn server_loop(
     )?;
 
     tokio::spawn(async move {
+        let data_channel_rx = data_channel_rx;
         loop {
             let incoming = endpoint.accept().await;
             if let Some(incoming) = incoming {
