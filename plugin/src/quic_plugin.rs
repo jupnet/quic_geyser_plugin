@@ -230,7 +230,7 @@ impl GeyserPlugin for QuicGeyserPlugin {
             signatures: jupiter_transaction.transaction.signatures().to_vec(),
             message: versioned_message,
             is_vote: jupiter_transaction.is_vote,
-            transasction_meta: TransactionMeta {
+            transaction_meta: TransactionMeta {
                 error: match &status_meta.status {
                     Ok(_) => None,
                     Err(e) => Some(e.clone()),

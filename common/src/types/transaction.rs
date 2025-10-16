@@ -28,7 +28,7 @@ pub struct Transaction {
     pub signatures: Vec<TypedSignature>,
     pub message: VersionedMessage,
     pub is_vote: bool,
-    pub transasction_meta: TransactionMeta,
+    pub transaction_meta: TransactionMeta,
     pub index: u64,
     pub batched_steps_meta: Option<Vec<TransactionMeta>>,
 }

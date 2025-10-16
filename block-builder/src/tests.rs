@@ -129,7 +129,7 @@ async fn test_block_creation_transactions_after_blockmeta() {
             instructions: vec![],
         }),
         is_vote: false,
-        transasction_meta: TransactionMeta {
+        transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
             pre_balances: vec![],
@@ -161,7 +161,7 @@ async fn test_block_creation_transactions_after_blockmeta() {
             instructions: vec![],
         }),
         is_vote: false,
-        transasction_meta: TransactionMeta {
+        transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
             pre_balances: vec![],
@@ -193,7 +193,7 @@ async fn test_block_creation_transactions_after_blockmeta() {
             instructions: vec![],
         }),
         is_vote: false,
-        transasction_meta: TransactionMeta {
+        transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
             pre_balances: vec![],
@@ -343,7 +343,7 @@ async fn test_block_creation_blockmeta_after_transactions() {
             instructions: vec![],
         }),
         is_vote: false,
-        transasction_meta: TransactionMeta {
+        transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
             pre_balances: vec![],
@@ -375,7 +375,7 @@ async fn test_block_creation_blockmeta_after_transactions() {
             instructions: vec![],
         }),
         is_vote: false,
-        transasction_meta: TransactionMeta {
+        transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
             pre_balances: vec![],
@@ -407,7 +407,7 @@ async fn test_block_creation_blockmeta_after_transactions() {
             instructions: vec![],
         }),
         is_vote: false,
-        transasction_meta: TransactionMeta {
+        transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
             pre_balances: vec![],
@@ -564,7 +564,7 @@ async fn test_block_creation_incomplete_block_after_slot_notification() {
             instructions: vec![],
         }),
         is_vote: false,
-        transasction_meta: TransactionMeta {
+        transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
             pre_balances: vec![],
@@ -596,7 +596,7 @@ async fn test_block_creation_incomplete_block_after_slot_notification() {
             instructions: vec![],
         }),
         is_vote: false,
-        transasction_meta: TransactionMeta {
+        transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
             pre_balances: vec![],
@@ -628,7 +628,7 @@ async fn test_block_creation_incomplete_block_after_slot_notification() {
             instructions: vec![],
         }),
         is_vote: false,
-        transasction_meta: TransactionMeta {
+        transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
             pre_balances: vec![],
@@ -782,7 +782,7 @@ async fn test_block_creation_incomplete_slot() {
             instructions: vec![],
         }),
         is_vote: false,
-        transasction_meta: TransactionMeta {
+        transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
             pre_balances: vec![],
@@ -814,7 +814,7 @@ async fn test_block_creation_incomplete_slot() {
             instructions: vec![],
         }),
         is_vote: false,
-        transasction_meta: TransactionMeta {
+        transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
             pre_balances: vec![],
@@ -849,7 +849,7 @@ async fn test_block_creation_incomplete_slot() {
             instructions: vec![],
         }),
         is_vote: false,
-        transasction_meta: TransactionMeta {
+        transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
             pre_balances: vec![],
