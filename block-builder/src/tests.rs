@@ -30,6 +30,7 @@ async fn test_block_creation_transactions_after_blockmeta() {
         ms_sx,
         quic_geyser_common::compression::CompressionType::None,
         true,
+        &tokio::runtime::Handle::current(),
     );
 
     let acc1_pk = Pubkey::new_unique();
@@ -247,6 +248,7 @@ async fn test_block_creation_blockmeta_after_transactions() {
         ms_sx,
         quic_geyser_common::compression::CompressionType::None,
         true,
+        &tokio::runtime::Handle::current(),
     );
 
     let acc1_pk = Pubkey::new_unique();
@@ -465,6 +467,7 @@ async fn test_block_creation_incomplete_block_after_slot_notification() {
         ms_sx,
         quic_geyser_common::compression::CompressionType::None,
         true,
+        &tokio::runtime::Handle::current(),
     );
 
     let acc1_pk = Pubkey::new_unique();
@@ -682,6 +685,7 @@ async fn test_block_creation_incomplete_slot() {
         ms_sx,
         quic_geyser_common::compression::CompressionType::None,
         true,
+        &tokio::runtime::Handle::current(),
     );
 
     let acc1_pk = Pubkey::new_unique();

@@ -61,13 +61,13 @@ impl GeyserPlugin for QuicGeyserPlugin {
                 GeyserPluginError::Custom(Box::new(QuicGeyserError::ErrorConfiguringServer))
             })?;
         if enable_block_builder {
-            // disable block building for now
             let (sx, rx) = tokio::sync::mpsc::unbounded_channel();
             start_block_building_thread(
                 rx,
                 quic_server.data_channel_sender.clone(),
                 compression_type,
                 build_blocks_with_accounts,
+                runtime.handle(),
             );
             self.block_builder_channel = Some(sx);
         }
