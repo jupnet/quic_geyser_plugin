@@ -21,7 +21,7 @@ use std::time::Duration;
 use tokio::io::AsyncWriteExt;
 
 fn create_endpoint(connection_parameters: ConnectionParameters, keypair: &Keypair) -> Endpoint {
-    let (cert, priv_key) = new_dummy_x509_certificate(&keypair);
+    let (cert, priv_key) = new_dummy_x509_certificate(keypair);
     let mut endpoint = {
         let client_socket = UdpSocket::bind(parse_host_port("[::]:0").unwrap())
             .expect("Client socket should be binded");
