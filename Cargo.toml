@@ -20,15 +20,15 @@ license = "AGPL"
 edition = "2021"
 
 [workspace.dependencies]
-jupnet-sdk = { git = "https://github.com/jupnet/jupnet-svm.git", branch = "v2.1" }
-jupnet-streamer = { git = "https://github.com/jupnet/jupnet-svm.git", branch = "v2.1" }
-jupnet-quic-client = { git = "https://github.com/jupnet/jupnet-svm.git", branch = "v2.1" }
-jupnet-program = { git = "https://github.com/jupnet/jupnet-svm.git", branch = "v2.1" }
-jupnet-transaction-status = { git = "https://github.com/jupnet/jupnet-svm.git", branch = "v2.1" }
-jupnet-logger = { git = "https://github.com/jupnet/jupnet-svm.git", branch = "v2.1" }
-jupnet-rpc-client = { git = "https://github.com/jupnet/jupnet-svm.git", branch = "v2.1" }
-jupnet-rpc-client-api = { git = "https://github.com/jupnet/jupnet-svm.git", branch = "v2.1" }
-agave-geyser-plugin-interface = { git = "https://github.com/jupnet/jupnet-svm.git", branch = "v2.1" }
+jupnet-sdk = { git = "https://github.com/jupnet/jupnet-svm.git" }
+jupnet-streamer = { git = "https://github.com/jupnet/jupnet-svm.git" }
+jupnet-quic-client = { git = "https://github.com/jupnet/jupnet-svm.git" }
+jupnet-program = { git = "https://github.com/jupnet/jupnet-svm.git" }
+jupnet-transaction-status = { git = "https://github.com/jupnet/jupnet-svm.git" }
+jupnet-logger = { git = "https://github.com/jupnet/jupnet-svm.git" }
+jupnet-rpc-client = { git = "https://github.com/jupnet/jupnet-svm.git" }
+jupnet-rpc-client-api = { git = "https://github.com/jupnet/jupnet-svm.git" }
+agave-geyser-plugin-interface = { git = "https://github.com/jupnet/jupnet-svm.git" }
 
 itertools = "0.10.5"
 serde = "1.0.201"
