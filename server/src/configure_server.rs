@@ -34,9 +34,9 @@ pub(crate) fn configure_server(
 
     // QUIC_MAX_CONCURRENT_STREAMS doubled, which was found to improve reliability
     let timeout: VarInt = ((quic_parameters.connection_timeout * 1000) as u32).into();
-    let idle_timeout = IdleTimeout::try_from(timeout).unwrap();
+    let idle_timeout = IdleTimeout::from(timeout);
     config.max_idle_timeout(Some(idle_timeout));
-    config.max_concurrent_uni_streams((1 as u32).into());
+    config.max_concurrent_uni_streams((1_u32).into());
     config.stream_receive_window((quic_parameters.recieve_window_size as u32).into());
     config.crypto_buffer_size(64 * 1024); // 64 Kbs
     config.send_window(24 * 1024 * 1024); // 24 MBs
