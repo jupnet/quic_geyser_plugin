@@ -188,8 +188,6 @@ impl GeyserPlugin for QuicGeyserPlugin {
         let ReplicaTransactionInfoVersions::V0_0_3(jupiter_transaction) = transaction;
 
         let message = jupiter_transaction.transaction.message().clone();
-        let _account_keys: Vec<_> = message.account_keys().iter().copied().collect();
-
         let batched_steps_meta = match message {
             Legacy(_) => None,
             Batched(_) => Some(
