@@ -166,8 +166,10 @@ pub async fn build_blocks(
                     );
                 }
             }
-            ChannelMessage::Block(_) => {
-                unreachable!()
+            ChannelMessage::Block(_)
+            | ChannelMessage::TransactionStatus(_)
+            | ChannelMessage::TransactionNotify(_) => {
+                // These variants should not reach the block builder
             }
         }
     }

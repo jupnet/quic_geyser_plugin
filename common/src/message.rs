@@ -6,7 +6,7 @@ use crate::{
         account::Account,
         block::Block,
         block_meta::{BlockMeta, SlotMeta},
-        transaction::Transaction,
+        transaction::{Transaction, TransactionNotify, TransactionStatus},
     },
 };
 
@@ -17,6 +17,8 @@ pub enum Message {
     SlotMsg(SlotMeta),
     BlockMetaMsg(BlockMeta),
     TransactionMsg(Box<Transaction>),
+    TransactionNotifyMsg(Box<TransactionNotify>),
+    TransactionStatusMsg(TransactionStatus),
     BlockMsg(Block),
     Filters(Vec<Filter>), // sent from client to server
     Ping,

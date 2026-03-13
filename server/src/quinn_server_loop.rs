@@ -90,6 +90,10 @@ fn channel_message_to_message(
         ChannelMessage::BlockMeta(block_meta) => Message::BlockMetaMsg(block_meta),
         ChannelMessage::Transaction(transaction) => Message::TransactionMsg(transaction),
         ChannelMessage::Block(block) => Message::BlockMsg(block),
+        ChannelMessage::TransactionStatus(status) => Message::TransactionStatusMsg(status),
+        ChannelMessage::TransactionNotify(notify) => {
+            Message::TransactionNotifyMsg(notify)
+        }
     }
 }
 
@@ -219,10 +223,12 @@ fn start_dispatcher(
                 break;
             };
 
-            // if the message is allowed by the filters, send it to the data channel
-            if current_filters.iter().any(|f| f.allows(&message)) {
+            // if the message is allowed by the filters, transform and send it
+            let matching_filter = current_filters.iter().find(|f| f.allows(&message));
+            if let Some(filter) = matching_filter {
+                let output = filter.transform(message);
                 if let Some(sender) = senders.pop_front() {
-                    let _ = sender.send(message);
+                    let _ = sender.send(output);
                     // round robin senders
                     senders.push_back(sender);
                     message_enqueued.fetch_add(1, Ordering::Relaxed);

@@ -18,6 +18,14 @@ pub enum Filter {
     BlockAll,
     DeletedAccounts,
     AccountsExcluding(AccountFilter),
+    TransactionStatus(TypedSignature),
+    TransactionStatusAll,
+    TransactionAllProgram(Pubkey),
+    TransactionStatusByAccount(Pubkey),
+    /// Lightweight transaction notification filtered by program.
+    /// Sends signature, status, CU consumed, and optionally the message.
+    /// Bool flag controls whether the message is included.
+    TransactionNotifyByProgram(Pubkey, bool),
 }
 
 impl Filter {
@@ -50,6 +58,67 @@ impl Filter {
                 _ => false,
             },
             Filter::AccountsExcluding(account) => !account.allows(message),
+            Filter::TransactionStatus(signature) => match message {
+                ChannelMessage::Transaction(transaction) => {
+                    transaction.signatures[0] == *signature
+                }
+                _ => false,
+            },
+            Filter::TransactionStatusAll => {
+                matches!(message, ChannelMessage::Transaction(_))
+            }
+            Filter::TransactionAllProgram(program_id) => match message {
+                ChannelMessage::Transaction(transaction) => {
+                    transaction.references_program(program_id)
+                }
+                _ => false,
+            },
+            Filter::TransactionStatusByAccount(program_id) => match message {
+                ChannelMessage::Transaction(transaction) => {
+                    transaction.references_program(program_id)
+                }
+                _ => false,
+            },
+            Filter::TransactionNotifyByProgram(program_id, _) => match message {
+                ChannelMessage::Transaction(transaction) => {
+                    transaction.references_program(program_id)
+                }
+                _ => false,
+            },
+        }
+    }
+
+    /// Transform the channel message based on the filter type.
+    /// Some filters send a lighter representation instead of the full message.
+    /// Should only be called after `allows()` returns true.
+    pub fn transform(&self, message: ChannelMessage) -> ChannelMessage {
+        match self {
+            Filter::TransactionStatus(_) | Filter::TransactionStatusAll
+            | Filter::TransactionStatusByAccount(_) => {
+                if let ChannelMessage::Transaction(tx) = &message {
+                    ChannelMessage::TransactionStatus(
+                        crate::types::transaction::TransactionStatus {
+                            slot_identifier: tx.slot_identifier,
+                            signatures: tx.signatures.clone(),
+                            error: tx.transaction_meta.error.clone(),
+                            fee: tx.transaction_meta.fee,
+                        },
+                    )
+                } else {
+                    message
+                }
+            }
+            Filter::TransactionNotifyByProgram(_, include_message) => {
+                if let ChannelMessage::Transaction(tx) = &message {
+                    ChannelMessage::TransactionNotify(Box::new(
+                        tx.to_notify(*include_message),
+                    ))
+                } else {
+                    message
+                }
+            }
+            // All other filters pass the message through unchanged
+            _ => message,
         }
     }
 }
@@ -125,12 +194,208 @@ impl AccountFilter {
 
 #[cfg(test)]
 mod tests {
-    use jupnet_sdk::{account::Account as JupnetAccount, pubkey::Pubkey};
+    use jupnet_sdk::{
+        account::Account as JupnetAccount,
+        hash::Hash,
+        message::{Message, MessageHeader},
+        pubkey::Pubkey,
+        signature::TypedSignature,
+    };
 
     use crate::{
         channel_message::{AccountData, ChannelMessage},
-        filters::{AccountFilter, AccountFilterType, MemcmpFilter},
+        filters::{AccountFilter, AccountFilterType, Filter, MemcmpFilter},
+        types::{
+            slot_identifier::SlotIdentifier,
+            transaction::{Transaction, TransactionMeta},
+        },
     };
+
+    fn make_tx(program_ids: &[Pubkey]) -> Box<Transaction> {
+        let signer = Pubkey::new_unique();
+        let mut account_keys = vec![signer];
+        account_keys.extend_from_slice(program_ids);
+
+        let instructions = program_ids
+            .iter()
+            .enumerate()
+            .map(|(i, _)| jupnet_sdk::instruction::CompiledInstruction {
+                program_id_index: (i + 1) as u8,
+                accounts: vec![0],
+                data: vec![],
+            })
+            .collect();
+
+        Box::new(Transaction {
+            slot_identifier: SlotIdentifier { slot: 42 },
+            signatures: vec![TypedSignature::new_unique()],
+            message: jupnet_sdk::message::VersionedMessage::Legacy(Message {
+                header: MessageHeader {
+                    num_required_signatures: 1,
+                    num_readonly_signed_accounts: 0,
+                    num_readonly_unsigned_accounts: program_ids.len() as u8,
+                },
+                account_keys,
+                recent_blockhash: Hash::new_unique(),
+                instructions,
+            }),
+            is_vote: false,
+            transaction_meta: TransactionMeta {
+                error: None,
+                fee: 5000,
+                pre_balances: vec![100000],
+                post_balances: vec![95000],
+                inner_instructions: None,
+                log_messages: None,
+                rewards: None,
+                return_data: None,
+                compute_units_consumed: Some(12345),
+            },
+            index: 0,
+            batched_steps_meta: None,
+        })
+    }
+
+    #[allow(clippy::bool_assert_comparison)]
+    #[tokio::test]
+    async fn test_transaction_all_program_filter() {
+        let program_a = Pubkey::new_unique();
+        let program_b = Pubkey::new_unique();
+        let program_c = Pubkey::new_unique();
+
+        let tx = make_tx(&[program_a, program_b]);
+        let msg = ChannelMessage::Transaction(tx);
+
+        let f_a = Filter::TransactionAllProgram(program_a);
+        let f_b = Filter::TransactionAllProgram(program_b);
+        let f_c = Filter::TransactionAllProgram(program_c);
+
+        assert_eq!(f_a.allows(&msg), true);
+        assert_eq!(f_b.allows(&msg), true);
+        assert_eq!(f_c.allows(&msg), false);
+
+        // transform should pass through the full transaction unchanged
+        let transformed = f_a.transform(msg.clone());
+        assert!(matches!(transformed, ChannelMessage::Transaction(_)));
+        assert_eq!(transformed, msg);
+
+        // non-transaction messages should not match
+        let slot_msg = ChannelMessage::Slot(1, 0, crate::types::block_meta::SlotStatus::Processed);
+        assert_eq!(f_a.allows(&slot_msg), false);
+    }
+
+    #[allow(clippy::bool_assert_comparison)]
+    #[tokio::test]
+    async fn test_transaction_status_filters() {
+        let program_a = Pubkey::new_unique();
+        let program_b = Pubkey::new_unique();
+
+        let tx = make_tx(&[program_a]);
+        let sig = tx.signatures[0].clone();
+        let msg = ChannelMessage::Transaction(tx);
+
+        // TransactionStatus by signature
+        let f_sig = Filter::TransactionStatus(sig.clone());
+        let f_wrong_sig = Filter::TransactionStatus(TypedSignature::new_unique());
+        assert_eq!(f_sig.allows(&msg), true);
+        assert_eq!(f_wrong_sig.allows(&msg), false);
+
+        let transformed = f_sig.transform(msg.clone());
+        match &transformed {
+            ChannelMessage::TransactionStatus(status) => {
+                assert_eq!(status.signatures[0], sig);
+                assert_eq!(status.error, None);
+                assert_eq!(status.fee, 5000);
+                assert_eq!(status.slot_identifier.slot, 42);
+            }
+            _ => panic!("expected TransactionStatus"),
+        }
+
+        // TransactionStatusAll
+        let f_all = Filter::TransactionStatusAll;
+        assert_eq!(f_all.allows(&msg), true);
+        let transformed = f_all.transform(msg.clone());
+        assert!(matches!(transformed, ChannelMessage::TransactionStatus(_)));
+
+        // TransactionStatusByAccount
+        let f_by_acc = Filter::TransactionStatusByAccount(program_a);
+        let f_by_acc_miss = Filter::TransactionStatusByAccount(program_b);
+        assert_eq!(f_by_acc.allows(&msg), true);
+        assert_eq!(f_by_acc_miss.allows(&msg), false);
+
+        let transformed = f_by_acc.transform(msg.clone());
+        match &transformed {
+            ChannelMessage::TransactionStatus(status) => {
+                assert_eq!(status.slot_identifier.slot, 42);
+                assert_eq!(status.fee, 5000);
+            }
+            _ => panic!("expected TransactionStatus"),
+        }
+    }
+
+    #[allow(clippy::bool_assert_comparison)]
+    #[tokio::test]
+    async fn test_transaction_notify_by_program() {
+        let program_a = Pubkey::new_unique();
+        let program_b = Pubkey::new_unique();
+
+        let tx = make_tx(&[program_a]);
+        let sig = tx.signatures[0].clone();
+        let msg = ChannelMessage::Transaction(tx);
+
+        // without message
+        let f_no_msg = Filter::TransactionNotifyByProgram(program_a, false);
+        let f_with_msg = Filter::TransactionNotifyByProgram(program_a, true);
+        let f_miss = Filter::TransactionNotifyByProgram(program_b, false);
+
+        assert_eq!(f_no_msg.allows(&msg), true);
+        assert_eq!(f_with_msg.allows(&msg), true);
+        assert_eq!(f_miss.allows(&msg), false);
+
+        // transform without message
+        let transformed = f_no_msg.transform(msg.clone());
+        match &transformed {
+            ChannelMessage::TransactionNotify(notify) => {
+                assert_eq!(notify.signature, sig);
+                assert_eq!(notify.error, None);
+                assert_eq!(notify.compute_units_consumed, Some(12345));
+                assert_eq!(notify.slot_identifier.slot, 42);
+                assert!(notify.message.is_none());
+            }
+            _ => panic!("expected TransactionNotify"),
+        }
+
+        // transform with message
+        let transformed = f_with_msg.transform(msg.clone());
+        match &transformed {
+            ChannelMessage::TransactionNotify(notify) => {
+                assert_eq!(notify.signature, sig);
+                assert!(notify.message.is_some());
+            }
+            _ => panic!("expected TransactionNotify"),
+        }
+    }
+
+    #[allow(clippy::bool_assert_comparison)]
+    #[tokio::test]
+    async fn test_passthrough_filters_do_not_transform() {
+        let program_a = Pubkey::new_unique();
+        let tx = make_tx(&[program_a]);
+        let sig = tx.signatures[0].clone();
+        let msg = ChannelMessage::Transaction(tx);
+
+        // TransactionsAll should pass through full transaction
+        let f = Filter::TransactionsAll;
+        assert_eq!(f.allows(&msg), true);
+        let transformed = f.transform(msg.clone());
+        assert!(matches!(transformed, ChannelMessage::Transaction(_)));
+
+        // Transaction(sig) should pass through full transaction
+        let f = Filter::Transaction(sig);
+        assert_eq!(f.allows(&msg), true);
+        let transformed = f.transform(msg.clone());
+        assert!(matches!(transformed, ChannelMessage::Transaction(_)));
+    }
 
     // asserts are more readable like this
     #[allow(clippy::bool_assert_comparison)]

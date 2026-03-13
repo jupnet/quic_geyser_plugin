@@ -21,4 +21,8 @@ pub struct Args {
 
     #[clap(short = 's', long, default_value_t = DEFAULT_MAX_STREAMS)]
     pub number_of_streams: u64,
+
+    /// Number of transactions to emit per slot.
+    #[clap(short = 't', long, default_value_t = 0)]
+    pub transactions_per_slot: u32,
 }

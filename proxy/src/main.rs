@@ -111,6 +111,12 @@ pub async fn main() -> anyhow::Result<()> {
             quic_geyser_common::message::Message::TransactionMsg(transaction_message) => {
                 ChannelMessage::Transaction(transaction_message)
             }
+            quic_geyser_common::message::Message::TransactionNotifyMsg(notify_message) => {
+                ChannelMessage::TransactionNotify(notify_message)
+            }
+            quic_geyser_common::message::Message::TransactionStatusMsg(status_message) => {
+                ChannelMessage::TransactionStatus(status_message)
+            }
             _ => {
                 unreachable!()
             }

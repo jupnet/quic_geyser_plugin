@@ -12,12 +12,13 @@ use std::{
 use clap::Parser;
 use cli::Args;
 use jupnet_rpc_client::rpc_client::RpcClient;
-use jupnet_sdk::commitment_config::CommitmentConfig;
+use jupnet_sdk::{commitment_config::CommitmentConfig, pubkey::Pubkey};
 use quic_geyser_client::non_blocking::client::Client;
 use quic_geyser_common::{
     filters::Filter,
     types::{block_meta::SlotStatus, connections_parameters::ConnectionParameters},
 };
+use std::str::FromStr;
 
 pub mod cli;
 
@@ -144,8 +145,25 @@ async fn run_client_non_blocking(
     //     filters.push(Filter::AccountsAll);
     // }
 
+    let mut filters: Vec<Filter> = vec![Filter::AccountsAll];
+
+    if let Some(ref program) = args.notify_program {
+        let pubkey = Pubkey::from_str(program).expect("invalid --notify-program pubkey");
+        filters.push(Filter::TransactionNotifyByProgram(
+            pubkey,
+            args.notify_include_message,
+        ));
+        println!("Subscribing to TransactionNotifyByProgram: {pubkey} (include_message={})", args.notify_include_message);
+    }
+
+    if let Some(ref program) = args.transaction_program {
+        let pubkey = Pubkey::from_str(program).expect("invalid --transaction-program pubkey");
+        filters.push(Filter::TransactionAllProgram(pubkey));
+        println!("Subscribing to TransactionAllProgram: {pubkey}");
+    }
+
     println!("Subscribing");
-    client.subscribe(vec![Filter::AccountsAll]).await.unwrap();
+    client.subscribe(filters).await.unwrap();
     println!("Subscribed");
 
     tokio::spawn(async move {
@@ -234,6 +252,24 @@ async fn run_client_non_blocking(
                 }
                 quic_geyser_common::message::Message::Filters(_) => {
                     // Not supported
+                }
+                quic_geyser_common::message::Message::TransactionNotifyMsg(notify) => {
+                    log::trace!(
+                        "got transaction notify: {}",
+                        notify.signature.to_string()
+                    );
+                    client_stats
+                        .transaction_notifications
+                        .fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+                }
+                quic_geyser_common::message::Message::TransactionStatusMsg(status) => {
+                    log::trace!(
+                        "got transaction status: {}",
+                        status.signatures[0].to_string()
+                    );
+                    client_stats
+                        .transaction_notifications
+                        .fetch_add(1, std::sync::atomic::Ordering::Relaxed);
                 }
                 quic_geyser_common::message::Message::Ping => {
                     // not supported

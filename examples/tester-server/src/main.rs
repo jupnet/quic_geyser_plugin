@@ -1,12 +1,22 @@
 use clap::Parser;
 use cli::Args;
 use itertools::Itertools;
-use jupnet_sdk::signature::Keypair;
-use jupnet_sdk::{account::Account, pubkey::Pubkey};
+use jupnet_sdk::{
+    account::Account,
+    hash::Hash,
+    instruction::CompiledInstruction,
+    message::{Message, MessageHeader},
+    pubkey::Pubkey,
+    signature::{Keypair, TypedSignature},
+};
 use quic_geyser_common::{
     channel_message::{AccountData, ChannelMessage},
     config::{CompressionParameters, ConfigQuicPlugin, QuicParameters},
     net::parse_host_port,
+    types::{
+        slot_identifier::SlotIdentifier,
+        transaction::{Transaction, TransactionMeta},
+    },
 };
 use quic_geyser_server::quic_server::QuicServer;
 use rand::{thread_rng, Rng};
@@ -61,6 +71,17 @@ pub async fn main() -> anyhow::Result<()> {
             }
         })
         .collect_vec();
+
+    // Generate a few program ids for test transactions
+    let test_program_ids: Vec<Pubkey> = (0..3).map(|_| Pubkey::new_unique()).collect();
+    if args.transactions_per_slot > 0 {
+        log::info!(
+            "Emitting {} transactions per slot with program ids: {:?}",
+            args.transactions_per_slot,
+            test_program_ids
+        );
+    }
+
     let sleep_time_in_nanos = 1_000_000_000 / (args.accounts_per_second / 1000) as u64;
     loop {
         slot += 1;
@@ -99,6 +120,48 @@ pub async fn main() -> anyhow::Result<()> {
                 quic_geyser_common::types::block_meta::SlotStatus::Finalized,
             ))
             .unwrap();
+
+        // Emit test transactions
+        for i in 0..args.transactions_per_slot {
+            let program_id = test_program_ids[i as usize % test_program_ids.len()];
+            let signer = Pubkey::new_unique();
+            let tx = Transaction {
+                slot_identifier: SlotIdentifier { slot },
+                signatures: vec![TypedSignature::new_unique()],
+                message: jupnet_sdk::message::VersionedMessage::Legacy(Message {
+                    header: MessageHeader {
+                        num_required_signatures: 1,
+                        num_readonly_signed_accounts: 0,
+                        num_readonly_unsigned_accounts: 1,
+                    },
+                    account_keys: vec![signer, program_id],
+                    recent_blockhash: Hash::new_unique(),
+                    instructions: vec![CompiledInstruction {
+                        program_id_index: 1,
+                        accounts: vec![0],
+                        data: vec![rand.gen(), rand.gen(), rand.gen(), rand.gen()],
+                    }],
+                }),
+                is_vote: false,
+                transaction_meta: TransactionMeta {
+                    error: None,
+                    fee: 5000,
+                    pre_balances: vec![1_000_000, 0],
+                    post_balances: vec![995_000, 0],
+                    inner_instructions: None,
+                    log_messages: Some(vec![format!("Program {program_id} invoke [1]")]),
+                    rewards: None,
+                    return_data: None,
+                    compute_units_consumed: Some(rand.gen_range(1000..200_000)),
+                },
+                index: i as u64,
+                batched_steps_meta: None,
+            };
+            quic_server
+                .send_message(ChannelMessage::Transaction(Box::new(tx)))
+                .unwrap();
+        }
+
         for i in 1..args.accounts_per_second + 1 {
             write_version += 1;
             let data_index = 0;
