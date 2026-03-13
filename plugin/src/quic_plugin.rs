@@ -29,7 +29,6 @@ use quic_geyser_server::quic_server::QuicServer;
 pub struct QuicGeyserPlugin {
     quic_server: Option<QuicServer>,
     block_builder_channel: Option<tokio::sync::mpsc::UnboundedSender<ChannelMessage>>,
-    rpc_server_message_channel: Option<std::sync::mpsc::Sender<ChannelMessage>>,
     runtime: Option<tokio::runtime::Runtime>,
 }
 
@@ -102,14 +101,23 @@ impl GeyserPlugin for QuicGeyserPlugin {
             return Ok(());
         }
         let ReplicaAccountInfoVersions::V0_0_3(account_info) = account;
+        let owner = Pubkey::try_from(account_info.owner).map_err(|e| {
+            GeyserPluginError::Custom(
+                format!("Invalid owner pubkey: {e}").into(),
+            )
+        })?;
+        let pubkey = Pubkey::try_from(account_info.pubkey).map_err(|e| {
+            GeyserPluginError::Custom(
+                format!("Invalid account pubkey: {e}").into(),
+            )
+        })?;
         let account = Account {
             lamports: account_info.lamports,
             data: account_info.data.to_vec(),
-            owner: Pubkey::try_from(account_info.owner).expect("valid pubkey"),
+            owner,
             executable: account_info.executable,
             rent_epoch: account_info.rent_epoch,
         };
-        let pubkey: Pubkey = Pubkey::try_from(account_info.pubkey).expect("valid pubkey");
 
         let channel_message = ChannelMessage::Account(
             AccountData {
@@ -123,10 +131,6 @@ impl GeyserPlugin for QuicGeyserPlugin {
 
         if let Some(block_channel) = &self.block_builder_channel {
             let _ = block_channel.send(channel_message.clone());
-        }
-
-        if let Some(rpc_server_message_channel) = &self.rpc_server_message_channel {
-            let _ = rpc_server_message_channel.send(channel_message.clone());
         }
 
         quic_server.send_message(channel_message).map_err(|e| {
@@ -167,10 +171,6 @@ impl GeyserPlugin for QuicGeyserPlugin {
             let _ = block_channel.send(slot_message.clone());
         }
 
-        if let Some(rpc_server_message_channel) = &self.rpc_server_message_channel {
-            let _ = rpc_server_message_channel.send(slot_message.clone());
-        }
-
         quic_server
             .send_message(slot_message)
             .map_err(|e| GeyserPluginError::Custom(Box::new(e)))?;
@@ -188,16 +188,6 @@ impl GeyserPlugin for QuicGeyserPlugin {
         let ReplicaTransactionInfoVersions::V0_0_3(jupiter_transaction) = transaction;
 
         let message = jupiter_transaction.transaction.message().clone();
-        let mut account_keys = vec![];
-
-        for index in 0.. {
-            let account = message.account_keys().get(index);
-            match account {
-                Some(account) => account_keys.push(*account),
-                None => break,
-            }
-        }
-
         let batched_steps_meta = match message {
             Legacy(_) => None,
             Batched(_) => Some(
@@ -288,10 +278,6 @@ impl GeyserPlugin for QuicGeyserPlugin {
 
         if let Some(block_channel) = &self.block_builder_channel {
             let _ = block_channel.send(block_meta_message.clone());
-        }
-
-        if let Some(rpc_server_message_channel) = &self.rpc_server_message_channel {
-            let _ = rpc_server_message_channel.send(block_meta_message.clone());
         }
 
         quic_server
