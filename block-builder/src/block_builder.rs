@@ -166,10 +166,8 @@ pub async fn build_blocks(
                     );
                 }
             }
-            ChannelMessage::Block(_)
-            | ChannelMessage::TransactionStatus(_)
-            | ChannelMessage::TransactionNotify(_) => {
-                // These variants should not reach the block builder
+            ChannelMessage::Block(_) => {
+                // Block variants should not reach the block builder
             }
         }
     }

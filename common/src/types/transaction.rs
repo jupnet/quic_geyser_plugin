@@ -12,8 +12,8 @@ use super::slot_identifier::SlotIdentifier;
 pub struct TransactionMeta {
     pub error: Option<TransactionError>,
     pub fee: u64,
-    pub pre_balances: Vec<u64>,
-    pub post_balances: Vec<u64>,
+    pub pre_balances: Option<Vec<u64>>,
+    pub post_balances: Option<Vec<u64>>,
     pub inner_instructions: Option<Vec<InnerInstructions>>,
     pub log_messages: Option<Vec<String>>,
     pub rewards: Option<Rewards>,
@@ -26,51 +26,19 @@ pub struct TransactionMeta {
 pub struct Transaction {
     pub slot_identifier: SlotIdentifier,
     pub signatures: Vec<TypedSignature>,
-    pub message: VersionedMessage,
+    pub message: Option<VersionedMessage>,
     pub is_vote: bool,
     pub transaction_meta: TransactionMeta,
     pub index: u64,
     pub batched_steps_meta: Option<Vec<TransactionMeta>>,
 }
 
-
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
-#[repr(C)]
-pub struct TransactionStatus {
-    pub slot_identifier: SlotIdentifier,
-    pub signatures: Vec<TypedSignature>,
-    pub error: Option<TransactionError>,
-    pub fee: u64,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
-#[repr(C)]
-pub struct TransactionNotify {
-    pub slot_identifier: SlotIdentifier,
-    pub signature: TypedSignature,
-    pub error: Option<TransactionError>,
-    pub compute_units_consumed: Option<u64>,
-    pub message: Option<VersionedMessage>,
-}
-
 impl Transaction {
     /// Returns true if the given program is referenced in this transaction's account keys.
-    pub fn references_program(&self, program_id: &Pubkey) -> bool {
-        self.message.static_account_keys().any(|k| k == program_id)
-    }
-
-    /// Create a lightweight TransactionNotify from this transaction.
-    pub fn to_notify(&self, include_message: bool) -> TransactionNotify {
-        TransactionNotify {
-            slot_identifier: self.slot_identifier,
-            signature: self.signatures[0].clone(),
-            error: self.transaction_meta.error.clone(),
-            compute_units_consumed: self.transaction_meta.compute_units_consumed,
-            message: if include_message {
-                Some(self.message.clone())
-            } else {
-                None
-            },
+    pub fn references_account(&self, account: &Pubkey) -> bool {
+        match &self.message {
+            Some(msg) => msg.static_account_keys().any(|k| k == account),
+            None => false,
         }
     }
 }

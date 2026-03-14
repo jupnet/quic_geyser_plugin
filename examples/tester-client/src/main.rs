@@ -15,7 +15,7 @@ use jupnet_rpc_client::rpc_client::RpcClient;
 use jupnet_sdk::{commitment_config::CommitmentConfig, pubkey::Pubkey};
 use quic_geyser_client::non_blocking::client::Client;
 use quic_geyser_common::{
-    filters::Filter,
+    filters::{Filter, TransactionDetails, TransactionFilter},
     types::{block_meta::SlotStatus, connections_parameters::ConnectionParameters},
 };
 use std::str::FromStr;
@@ -149,17 +149,38 @@ async fn run_client_non_blocking(
 
     if let Some(ref program) = args.notify_program {
         let pubkey = Pubkey::from_str(program).expect("invalid --notify-program pubkey");
-        filters.push(Filter::TransactionNotifyByProgram(
-            pubkey,
-            args.notify_include_message,
-        ));
-        println!("Subscribing to TransactionNotifyByProgram: {pubkey} (include_message={})", args.notify_include_message);
+        let details = TransactionDetails {
+            original_message: args.notify_include_message,
+            ..Default::default()
+        };
+        filters.push(Filter::FilterTransaction(TransactionFilter {
+            signature: None,
+            filter_by_account: Some(pubkey),
+            output_type: details,
+            merge_accounts: false,
+        }));
+        println!(
+            "Subscribing to FilterTransaction(notify): {pubkey} (include_message={})",
+            args.notify_include_message
+        );
     }
 
     if let Some(ref program) = args.transaction_program {
         let pubkey = Pubkey::from_str(program).expect("invalid --transaction-program pubkey");
-        filters.push(Filter::TransactionAllProgram(pubkey));
-        println!("Subscribing to TransactionAllProgram: {pubkey}");
+        filters.push(Filter::FilterTransaction(TransactionFilter {
+            signature: None,
+            filter_by_account: Some(pubkey),
+            output_type: TransactionDetails {
+                original_message: true,
+                logs: true,
+                inner_instructions: true,
+                rewards: true,
+                pre_post_balances: true,
+                return_data: true,
+            },
+            merge_accounts: false,
+        }));
+        println!("Subscribing to FilterTransaction(full): {pubkey}");
     }
 
     println!("Subscribing");
@@ -252,24 +273,6 @@ async fn run_client_non_blocking(
                 }
                 quic_geyser_common::message::Message::Filters(_) => {
                     // Not supported
-                }
-                quic_geyser_common::message::Message::TransactionNotifyMsg(notify) => {
-                    log::trace!(
-                        "got transaction notify: {}",
-                        notify.signature.to_string()
-                    );
-                    client_stats
-                        .transaction_notifications
-                        .fetch_add(1, std::sync::atomic::Ordering::Relaxed);
-                }
-                quic_geyser_common::message::Message::TransactionStatusMsg(status) => {
-                    log::trace!(
-                        "got transaction status: {}",
-                        status.signatures[0].to_string()
-                    );
-                    client_stats
-                        .transaction_notifications
-                        .fetch_add(1, std::sync::atomic::Ordering::Relaxed);
                 }
                 quic_geyser_common::message::Message::Ping => {
                     // not supported

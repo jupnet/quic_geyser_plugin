@@ -90,10 +90,6 @@ fn channel_message_to_message(
         ChannelMessage::BlockMeta(block_meta) => Message::BlockMetaMsg(block_meta),
         ChannelMessage::Transaction(transaction) => Message::TransactionMsg(transaction),
         ChannelMessage::Block(block) => Message::BlockMsg(block),
-        ChannelMessage::TransactionStatus(status) => Message::TransactionStatusMsg(status),
-        ChannelMessage::TransactionNotify(notify) => {
-            Message::TransactionNotifyMsg(notify)
-        }
     }
 }
 

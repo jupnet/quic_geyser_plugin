@@ -128,7 +128,7 @@ pub async fn main() -> anyhow::Result<()> {
             let tx = Transaction {
                 slot_identifier: SlotIdentifier { slot },
                 signatures: vec![TypedSignature::new_unique()],
-                message: jupnet_sdk::message::VersionedMessage::Legacy(Message {
+                message: Some(jupnet_sdk::message::VersionedMessage::Legacy(Message {
                     header: MessageHeader {
                         num_required_signatures: 1,
                         num_readonly_signed_accounts: 0,
@@ -141,13 +141,13 @@ pub async fn main() -> anyhow::Result<()> {
                         accounts: vec![0],
                         data: vec![rand.gen(), rand.gen(), rand.gen(), rand.gen()],
                     }],
-                }),
+                })),
                 is_vote: false,
                 transaction_meta: TransactionMeta {
                     error: None,
                     fee: 5000,
-                    pre_balances: vec![1_000_000, 0],
-                    post_balances: vec![995_000, 0],
+                    pre_balances: Some(vec![1_000_000, 0]),
+                    post_balances: Some(vec![995_000, 0]),
                     inner_instructions: None,
                     log_messages: Some(vec![format!("Program {program_id} invoke [1]")]),
                     rewards: None,

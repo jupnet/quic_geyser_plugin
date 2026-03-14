@@ -101,15 +101,10 @@ impl GeyserPlugin for QuicGeyserPlugin {
             return Ok(());
         }
         let ReplicaAccountInfoVersions::V0_0_3(account_info) = account;
-        let owner = Pubkey::try_from(account_info.owner).map_err(|e| {
-            GeyserPluginError::Custom(
-                format!("Invalid owner pubkey: {e}").into(),
-            )
-        })?;
+        let owner = Pubkey::try_from(account_info.owner)
+            .map_err(|e| GeyserPluginError::Custom(format!("Invalid owner pubkey: {e}").into()))?;
         let pubkey = Pubkey::try_from(account_info.pubkey).map_err(|e| {
-            GeyserPluginError::Custom(
-                format!("Invalid account pubkey: {e}").into(),
-            )
+            GeyserPluginError::Custom(format!("Invalid account pubkey: {e}").into())
         })?;
         let account = Account {
             lamports: account_info.lamports,
@@ -197,8 +192,8 @@ impl GeyserPlugin for QuicGeyserPlugin {
                     .map(|step| TransactionMeta {
                         error: step.status.as_ref().err().cloned(),
                         fee: step.fee,
-                        pre_balances: step.pre_balances.clone(),
-                        post_balances: step.post_balances.clone(),
+                        pre_balances: Some(step.pre_balances.clone()),
+                        post_balances: Some(step.post_balances.clone()),
                         inner_instructions: step.inner_instructions.clone(),
                         log_messages: step.log_messages.clone(),
                         rewards: step.rewards.clone(),
@@ -218,7 +213,7 @@ impl GeyserPlugin for QuicGeyserPlugin {
         let transaction = Transaction {
             slot_identifier: SlotIdentifier { slot },
             signatures: jupiter_transaction.transaction.signatures().to_vec(),
-            message: versioned_message,
+            message: Some(versioned_message),
             is_vote: jupiter_transaction.is_vote,
             transaction_meta: TransactionMeta {
                 error: match &status_meta.status {
@@ -226,8 +221,8 @@ impl GeyserPlugin for QuicGeyserPlugin {
                     Err(e) => Some(e.clone()),
                 },
                 fee: status_meta.fee,
-                pre_balances: status_meta.pre_balances.clone(),
-                post_balances: status_meta.post_balances.clone(),
+                pre_balances: Some(status_meta.pre_balances.clone()),
+                post_balances: Some(status_meta.post_balances.clone()),
                 inner_instructions: status_meta.inner_instructions.clone(),
                 log_messages: status_meta.log_messages.clone(),
                 rewards: status_meta.rewards.clone(),

@@ -118,7 +118,7 @@ async fn test_block_creation_transactions_after_blockmeta() {
     let tx1 = Transaction {
         slot_identifier: SlotIdentifier { slot: 5 },
         signatures: vec![TypedSignature::new_unique()],
-        message: jupnet_sdk::message::VersionedMessage::Legacy(Message {
+        message: Some(jupnet_sdk::message::VersionedMessage::Legacy(Message {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -127,13 +127,13 @@ async fn test_block_creation_transactions_after_blockmeta() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-        }),
+        })),
         is_vote: false,
         transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
-            pre_balances: vec![],
-            post_balances: vec![],
+            pre_balances: Some(vec![]),
+            post_balances: Some(vec![]),
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
@@ -150,7 +150,7 @@ async fn test_block_creation_transactions_after_blockmeta() {
     let tx2 = Transaction {
         slot_identifier: SlotIdentifier { slot: 6 },
         signatures: vec![TypedSignature::new_unique()],
-        message: jupnet_sdk::message::VersionedMessage::Legacy(Message {
+        message: Some(jupnet_sdk::message::VersionedMessage::Legacy(Message {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -159,13 +159,13 @@ async fn test_block_creation_transactions_after_blockmeta() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-        }),
+        })),
         is_vote: false,
         transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
-            pre_balances: vec![],
-            post_balances: vec![],
+            pre_balances: Some(vec![]),
+            post_balances: Some(vec![]),
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
@@ -182,7 +182,7 @@ async fn test_block_creation_transactions_after_blockmeta() {
     let tx3 = Transaction {
         slot_identifier: SlotIdentifier { slot: 5 },
         signatures: vec![TypedSignature::new_unique()],
-        message: jupnet_sdk::message::VersionedMessage::Legacy(Message {
+        message: Some(jupnet_sdk::message::VersionedMessage::Legacy(Message {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -191,13 +191,13 @@ async fn test_block_creation_transactions_after_blockmeta() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-        }),
+        })),
         is_vote: false,
         transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
-            pre_balances: vec![],
-            post_balances: vec![],
+            pre_balances: Some(vec![]),
+            post_balances: Some(vec![]),
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
@@ -332,7 +332,7 @@ async fn test_block_creation_blockmeta_after_transactions() {
     let tx1 = Transaction {
         slot_identifier: SlotIdentifier { slot: 5 },
         signatures: vec![TypedSignature::new_unique()],
-        message: jupnet_sdk::message::VersionedMessage::Legacy(Message {
+        message: Some(jupnet_sdk::message::VersionedMessage::Legacy(Message {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -341,13 +341,13 @@ async fn test_block_creation_blockmeta_after_transactions() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-        }),
+        })),
         is_vote: false,
         transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
-            pre_balances: vec![],
-            post_balances: vec![],
+            pre_balances: Some(vec![]),
+            post_balances: Some(vec![]),
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
@@ -364,7 +364,7 @@ async fn test_block_creation_blockmeta_after_transactions() {
     let tx2 = Transaction {
         slot_identifier: SlotIdentifier { slot: 6 },
         signatures: vec![TypedSignature::new_unique()],
-        message: jupnet_sdk::message::VersionedMessage::Legacy(Message {
+        message: Some(jupnet_sdk::message::VersionedMessage::Legacy(Message {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -373,13 +373,13 @@ async fn test_block_creation_blockmeta_after_transactions() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-        }),
+        })),
         is_vote: false,
         transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
-            pre_balances: vec![],
-            post_balances: vec![],
+            pre_balances: Some(vec![]),
+            post_balances: Some(vec![]),
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
@@ -396,7 +396,7 @@ async fn test_block_creation_blockmeta_after_transactions() {
     let tx3 = Transaction {
         slot_identifier: SlotIdentifier { slot: 5 },
         signatures: vec![TypedSignature::new_unique()],
-        message: jupnet_sdk::message::VersionedMessage::Legacy(Message {
+        message: Some(jupnet_sdk::message::VersionedMessage::Legacy(Message {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -405,13 +405,13 @@ async fn test_block_creation_blockmeta_after_transactions() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-        }),
+        })),
         is_vote: false,
         transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
-            pre_balances: vec![],
-            post_balances: vec![],
+            pre_balances: Some(vec![]),
+            post_balances: Some(vec![]),
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
@@ -553,7 +553,7 @@ async fn test_block_creation_incomplete_block_after_slot_notification() {
     let tx1 = Transaction {
         slot_identifier: SlotIdentifier { slot: 5 },
         signatures: vec![TypedSignature::new_unique()],
-        message: jupnet_sdk::message::VersionedMessage::Legacy(Message {
+        message: Some(jupnet_sdk::message::VersionedMessage::Legacy(Message {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -562,13 +562,13 @@ async fn test_block_creation_incomplete_block_after_slot_notification() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-        }),
+        })),
         is_vote: false,
         transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
-            pre_balances: vec![],
-            post_balances: vec![],
+            pre_balances: Some(vec![]),
+            post_balances: Some(vec![]),
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
@@ -585,7 +585,7 @@ async fn test_block_creation_incomplete_block_after_slot_notification() {
     let tx2 = Transaction {
         slot_identifier: SlotIdentifier { slot: 6 },
         signatures: vec![TypedSignature::new_unique()],
-        message: jupnet_sdk::message::VersionedMessage::Legacy(Message {
+        message: Some(jupnet_sdk::message::VersionedMessage::Legacy(Message {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -594,13 +594,13 @@ async fn test_block_creation_incomplete_block_after_slot_notification() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-        }),
+        })),
         is_vote: false,
         transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
-            pre_balances: vec![],
-            post_balances: vec![],
+            pre_balances: Some(vec![]),
+            post_balances: Some(vec![]),
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
@@ -617,7 +617,7 @@ async fn test_block_creation_incomplete_block_after_slot_notification() {
     let tx3 = Transaction {
         slot_identifier: SlotIdentifier { slot: 5 },
         signatures: vec![TypedSignature::new_unique()],
-        message: jupnet_sdk::message::VersionedMessage::Legacy(Message {
+        message: Some(jupnet_sdk::message::VersionedMessage::Legacy(Message {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -626,13 +626,13 @@ async fn test_block_creation_incomplete_block_after_slot_notification() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-        }),
+        })),
         is_vote: false,
         transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
-            pre_balances: vec![],
-            post_balances: vec![],
+            pre_balances: Some(vec![]),
+            post_balances: Some(vec![]),
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
@@ -771,7 +771,7 @@ async fn test_block_creation_incomplete_slot() {
     let tx1 = Transaction {
         slot_identifier: SlotIdentifier { slot: 5 },
         signatures: vec![TypedSignature::new_unique()],
-        message: jupnet_sdk::message::VersionedMessage::Legacy(Message {
+        message: Some(jupnet_sdk::message::VersionedMessage::Legacy(Message {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -780,13 +780,13 @@ async fn test_block_creation_incomplete_slot() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-        }),
+        })),
         is_vote: false,
         transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
-            pre_balances: vec![],
-            post_balances: vec![],
+            pre_balances: Some(vec![]),
+            post_balances: Some(vec![]),
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
@@ -803,7 +803,7 @@ async fn test_block_creation_incomplete_slot() {
     let tx2 = Transaction {
         slot_identifier: SlotIdentifier { slot: 6 },
         signatures: vec![TypedSignature::new_unique()],
-        message: jupnet_sdk::message::VersionedMessage::Legacy(Message {
+        message: Some(jupnet_sdk::message::VersionedMessage::Legacy(Message {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -812,13 +812,13 @@ async fn test_block_creation_incomplete_slot() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-        }),
+        })),
         is_vote: false,
         transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
-            pre_balances: vec![],
-            post_balances: vec![],
+            pre_balances: Some(vec![]),
+            post_balances: Some(vec![]),
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
@@ -838,7 +838,7 @@ async fn test_block_creation_incomplete_slot() {
     let tx3 = Transaction {
         slot_identifier: SlotIdentifier { slot: 5 },
         signatures: vec![TypedSignature::new_unique()],
-        message: jupnet_sdk::message::VersionedMessage::Legacy(Message {
+        message: Some(jupnet_sdk::message::VersionedMessage::Legacy(Message {
             header: MessageHeader {
                 num_required_signatures: 1,
                 num_readonly_signed_accounts: 0,
@@ -847,13 +847,13 @@ async fn test_block_creation_incomplete_slot() {
             account_keys: vec![acc1_pk],
             recent_blockhash: Hash::new_unique(),
             instructions: vec![],
-        }),
+        })),
         is_vote: false,
         transaction_meta: TransactionMeta {
             error: None,
             fee: 0,
-            pre_balances: vec![],
-            post_balances: vec![],
+            pre_balances: Some(vec![]),
+            post_balances: Some(vec![]),
             inner_instructions: None,
             log_messages: Some(vec!["toto".to_string()]),
             rewards: None,
