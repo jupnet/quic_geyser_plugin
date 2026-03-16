@@ -23,6 +23,13 @@ pub struct TransactionMeta {
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
 #[repr(C)]
+pub struct BatchedStepMeta {
+    pub signatures: Vec<TypedSignature>,
+    pub meta: TransactionMeta,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
+#[repr(C)]
 pub struct Transaction {
     pub slot_identifier: SlotIdentifier,
     pub signatures: Vec<TypedSignature>,
@@ -30,7 +37,8 @@ pub struct Transaction {
     pub is_vote: bool,
     pub transaction_meta: TransactionMeta,
     pub index: u64,
-    pub batched_steps_meta: Option<Vec<TransactionMeta>>,
+    pub is_batched_transaction: bool,
+    pub batched_steps_meta: Option<Vec<BatchedStepMeta>>,
 }
 
 impl Transaction {

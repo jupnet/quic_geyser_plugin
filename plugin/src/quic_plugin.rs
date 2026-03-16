@@ -20,7 +20,7 @@ use quic_geyser_common::{
     types::{
         block_meta::{BlockMeta, SlotStatus as QuicSlotStatus},
         slot_identifier::SlotIdentifier,
-        transaction::{Transaction, TransactionMeta},
+        transaction::{BatchedStepMeta, Transaction, TransactionMeta},
     },
 };
 use quic_geyser_server::quic_server::QuicServer;
@@ -183,36 +183,64 @@ impl GeyserPlugin for QuicGeyserPlugin {
         let ReplicaTransactionInfoVersions::V0_0_3(jupiter_transaction) = transaction;
 
         let message = jupiter_transaction.transaction.message().clone();
-        let batched_steps_meta = match message {
+        let batched_steps_meta = match &message {
             Legacy(_) => None,
-            Batched(_) => Some(
-                jupiter_transaction
-                    .batch_step_metas
-                    .iter()
-                    .map(|step| TransactionMeta {
-                        error: step.status.as_ref().err().cloned(),
-                        fee: step.fee,
-                        pre_balances: Some(step.pre_balances.clone()),
-                        post_balances: Some(step.post_balances.clone()),
-                        inner_instructions: step.inner_instructions.clone(),
-                        log_messages: step.log_messages.clone(),
-                        rewards: step.rewards.clone(),
-                        return_data: step.return_data.clone(),
-                        compute_units_consumed: Some(step.compute_units_consumed),
-                    })
-                    .collect(),
-            ),
+            Batched(batched_msg) => {
+                let all_signatures = jupiter_transaction.transaction.signatures();
+                let num_batch_signers = batched_msg.batched_message.batch_signer_indexes.len();
+                let step_signatures = &all_signatures[num_batch_signers..];
+
+                let mut sig_offset = 0;
+                Some(
+                    batched_msg
+                        .batched_message
+                        .steps
+                        .iter()
+                        .zip(jupiter_transaction.batch_step_metas.iter())
+                        .map(|(step, step_meta)| {
+                            let num_inner_signers = step.inner_signer_indexes.len();
+                            let sigs = step_signatures[sig_offset..sig_offset + num_inner_signers]
+                                .to_vec();
+                            sig_offset += num_inner_signers;
+                            BatchedStepMeta {
+                                signatures: sigs,
+                                meta: TransactionMeta {
+                                    error: step_meta.status.as_ref().err().cloned(),
+                                    fee: step_meta.fee,
+                                    pre_balances: Some(step_meta.pre_balances.clone()),
+                                    post_balances: Some(step_meta.post_balances.clone()),
+                                    inner_instructions: step_meta.inner_instructions.clone(),
+                                    log_messages: step_meta.log_messages.clone(),
+                                    rewards: step_meta.rewards.clone(),
+                                    return_data: step_meta.return_data.clone(),
+                                    compute_units_consumed: Some(step_meta.compute_units_consumed),
+                                },
+                            }
+                        })
+                        .collect(),
+                )
+            }
+        };
+
+        let signatures = match &message {
+            Legacy(_) => jupiter_transaction.transaction.signatures().to_vec(),
+            Batched(message) => {
+                // get only batch signers signatures
+                jupiter_transaction.transaction.signatures()
+                    [..message.batched_message.batch_signer_indexes.len()]
+                    .to_vec()
+            }
         };
 
         let status_meta = jupiter_transaction.transaction_status_meta;
-        let versioned_message = match message {
+        let versioned_message = match &message {
             Legacy(message) => VersionedMessage::Legacy((*message.message).clone()),
             Batched(message) => VersionedMessage::Batched((*message.batched_message).clone()),
         };
 
         let transaction = Transaction {
             slot_identifier: SlotIdentifier { slot },
-            signatures: jupiter_transaction.transaction.signatures().to_vec(),
+            signatures,
             message: Some(versioned_message),
             is_vote: jupiter_transaction.is_vote,
             transaction_meta: TransactionMeta {
@@ -230,6 +258,7 @@ impl GeyserPlugin for QuicGeyserPlugin {
                 compute_units_consumed: Some(status_meta.compute_units_consumed),
             },
             index: jupiter_transaction.index as u64,
+            is_batched_transaction: matches!(message, Batched(_)),
             batched_steps_meta,
         };
 
