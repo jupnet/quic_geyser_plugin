@@ -4,7 +4,7 @@ use jupnet_sdk::signature::Keypair;
 use quic_geyser_common::{
     channel_message::{AccountData, ChannelMessage},
     config::{CompressionParameters, ConfigQuicPlugin, QuicParameters},
-    filters::Filter,
+    filters::{Filter, TransactionDetails, TransactionFilter},
     net::parse_host_port,
     types::connections_parameters::ConnectionParameters,
 };
@@ -36,7 +36,19 @@ pub async fn main() -> anyhow::Result<()> {
     client
         .subscribe(vec![
             Filter::AccountsAll,
-            Filter::TransactionsAll,
+            Filter::FilterTransaction(TransactionFilter {
+                signature: None,
+                filter_by_account: None,
+                output_type: TransactionDetails {
+                    original_message: true,
+                    logs: true,
+                    inner_instructions: true,
+                    rewards: true,
+                    pre_post_balances: true,
+                    return_data: true,
+                },
+                merge_accounts: false,
+            }),
             Filter::Slot,
             Filter::BlockMeta,
             Filter::BlockAll,

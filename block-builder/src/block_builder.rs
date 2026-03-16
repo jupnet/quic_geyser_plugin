@@ -167,7 +167,7 @@ pub async fn build_blocks(
                 }
             }
             ChannelMessage::Block(_) => {
-                unreachable!()
+                // Block variants should not reach the block builder
             }
         }
     }

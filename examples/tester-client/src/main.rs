@@ -12,12 +12,13 @@ use std::{
 use clap::Parser;
 use cli::Args;
 use jupnet_rpc_client::rpc_client::RpcClient;
-use jupnet_sdk::commitment_config::CommitmentConfig;
+use jupnet_sdk::{commitment_config::CommitmentConfig, pubkey::Pubkey};
 use quic_geyser_client::non_blocking::client::Client;
 use quic_geyser_common::{
-    filters::Filter,
+    filters::{Filter, TransactionDetails, TransactionFilter},
     types::{block_meta::SlotStatus, connections_parameters::ConnectionParameters},
 };
+use std::str::FromStr;
 
 pub mod cli;
 
@@ -144,8 +145,46 @@ async fn run_client_non_blocking(
     //     filters.push(Filter::AccountsAll);
     // }
 
+    let mut filters: Vec<Filter> = vec![Filter::AccountsAll];
+
+    if let Some(ref program) = args.notify_program {
+        let pubkey = Pubkey::from_str(program).expect("invalid --notify-program pubkey");
+        let details = TransactionDetails {
+            original_message: args.notify_include_message,
+            ..Default::default()
+        };
+        filters.push(Filter::FilterTransaction(TransactionFilter {
+            signature: None,
+            filter_by_account: Some(pubkey),
+            output_type: details,
+            merge_accounts: false,
+        }));
+        println!(
+            "Subscribing to FilterTransaction(notify): {pubkey} (include_message={})",
+            args.notify_include_message
+        );
+    }
+
+    if let Some(ref program) = args.transaction_program {
+        let pubkey = Pubkey::from_str(program).expect("invalid --transaction-program pubkey");
+        filters.push(Filter::FilterTransaction(TransactionFilter {
+            signature: None,
+            filter_by_account: Some(pubkey),
+            output_type: TransactionDetails {
+                original_message: true,
+                logs: true,
+                inner_instructions: true,
+                rewards: true,
+                pre_post_balances: true,
+                return_data: true,
+            },
+            merge_accounts: false,
+        }));
+        println!("Subscribing to FilterTransaction(full): {pubkey}");
+    }
+
     println!("Subscribing");
-    client.subscribe(vec![Filter::AccountsAll]).await.unwrap();
+    client.subscribe(filters).await.unwrap();
     println!("Subscribed");
 
     tokio::spawn(async move {
