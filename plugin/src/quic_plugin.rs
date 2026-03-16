@@ -222,6 +222,16 @@ impl GeyserPlugin for QuicGeyserPlugin {
             }
         };
 
+        let signatures = match &message {
+            Legacy(_) => jupiter_transaction.transaction.signatures().to_vec(),
+            Batched(message) => {
+                // get only batch signers signatures
+                jupiter_transaction.transaction.signatures()
+                    [..message.batched_message.batch_signer_indexes.len()]
+                    .to_vec()
+            }
+        };
+
         let status_meta = jupiter_transaction.transaction_status_meta;
         let versioned_message = match &message {
             Legacy(message) => VersionedMessage::Legacy((*message.message).clone()),
@@ -230,7 +240,7 @@ impl GeyserPlugin for QuicGeyserPlugin {
 
         let transaction = Transaction {
             slot_identifier: SlotIdentifier { slot },
-            signatures: jupiter_transaction.transaction.signatures().to_vec(),
+            signatures,
             message: Some(versioned_message),
             is_vote: jupiter_transaction.is_vote,
             transaction_meta: TransactionMeta {
