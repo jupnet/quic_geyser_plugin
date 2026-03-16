@@ -141,6 +141,7 @@ async fn test_block_creation_transactions_after_blockmeta() {
             compute_units_consumed: Some(1234),
         },
         index: 0,
+        is_batched_transaction: false,
         batched_steps_meta: None,
     };
     channelmsg_sx
@@ -173,6 +174,7 @@ async fn test_block_creation_transactions_after_blockmeta() {
             compute_units_consumed: Some(1234),
         },
         index: 0,
+        is_batched_transaction: false,
         batched_steps_meta: None,
     };
     channelmsg_sx
@@ -205,6 +207,7 @@ async fn test_block_creation_transactions_after_blockmeta() {
             compute_units_consumed: Some(1234),
         },
         index: 0,
+        is_batched_transaction: false,
         batched_steps_meta: None,
     };
     channelmsg_sx
@@ -355,6 +358,7 @@ async fn test_block_creation_blockmeta_after_transactions() {
             compute_units_consumed: Some(1234),
         },
         index: 0,
+        is_batched_transaction: false,
         batched_steps_meta: None,
     };
     channelmsg_sx
@@ -387,6 +391,7 @@ async fn test_block_creation_blockmeta_after_transactions() {
             compute_units_consumed: Some(1234),
         },
         index: 0,
+        is_batched_transaction: false,
         batched_steps_meta: None,
     };
     channelmsg_sx
@@ -419,6 +424,7 @@ async fn test_block_creation_blockmeta_after_transactions() {
             compute_units_consumed: Some(1234),
         },
         index: 0,
+        is_batched_transaction: false,
         batched_steps_meta: None,
     };
     channelmsg_sx
@@ -576,6 +582,7 @@ async fn test_block_creation_incomplete_block_after_slot_notification() {
             compute_units_consumed: Some(1234),
         },
         index: 0,
+        is_batched_transaction: false,
         batched_steps_meta: None,
     };
     channelmsg_sx
@@ -608,6 +615,7 @@ async fn test_block_creation_incomplete_block_after_slot_notification() {
             compute_units_consumed: Some(1234),
         },
         index: 0,
+        is_batched_transaction: false,
         batched_steps_meta: None,
     };
     channelmsg_sx
@@ -640,6 +648,7 @@ async fn test_block_creation_incomplete_block_after_slot_notification() {
             compute_units_consumed: Some(1234),
         },
         index: 0,
+        is_batched_transaction: false,
         batched_steps_meta: None,
     };
     channelmsg_sx
@@ -794,6 +803,7 @@ async fn test_block_creation_incomplete_slot() {
             compute_units_consumed: Some(1234),
         },
         index: 0,
+        is_batched_transaction: false,
         batched_steps_meta: None,
     };
     channelmsg_sx
@@ -826,6 +836,7 @@ async fn test_block_creation_incomplete_slot() {
             compute_units_consumed: Some(1234),
         },
         index: 0,
+        is_batched_transaction: false,
         batched_steps_meta: None,
     };
     channelmsg_sx
@@ -861,6 +872,7 @@ async fn test_block_creation_incomplete_slot() {
             compute_units_consumed: Some(1234),
         },
         index: 0,
+        is_batched_transaction: false,
         batched_steps_meta: None,
     };
     channelmsg_sx
