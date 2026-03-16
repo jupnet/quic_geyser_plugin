@@ -13,6 +13,7 @@ pub struct TransactionDetails {
     pub rewards: bool,
     pub pre_post_balances: bool,
     pub return_data: bool,
+    pub batched_steps: bool,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq)]
@@ -145,7 +146,12 @@ impl Filter {
                             compute_units_consumed: meta.compute_units_consumed,
                         },
                         index: tx.index,
-                        batched_steps_meta: tx.batched_steps_meta,
+                        is_batched_transaction: tx.is_batched_transaction,
+                        batched_steps_meta: if details.batched_steps {
+                            tx.batched_steps_meta
+                        } else {
+                            None
+                        },
                     };
                     ChannelMessage::Transaction(Box::new(stripped))
                 } else {
@@ -291,6 +297,7 @@ mod tests {
                 compute_units_consumed: Some(12345),
             },
             index: 0,
+            is_batched_transaction: false,
             batched_steps_meta: None,
         })
     }
@@ -304,6 +311,7 @@ mod tests {
             rewards: true,
             pre_post_balances: true,
             return_data: true,
+            batched_steps: true,
         }
     }
 

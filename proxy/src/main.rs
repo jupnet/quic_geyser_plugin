@@ -46,6 +46,7 @@ pub async fn main() -> anyhow::Result<()> {
                     rewards: true,
                     pre_post_balances: true,
                     return_data: true,
+                    batched_steps: true,
                 },
                 merge_accounts: false,
             }),

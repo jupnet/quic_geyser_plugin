@@ -155,6 +155,7 @@ pub async fn main() -> anyhow::Result<()> {
                     compute_units_consumed: Some(rand.gen_range(1000..200_000)),
                 },
                 index: i as u64,
+                is_batched_transaction: false,
                 batched_steps_meta: None,
             };
             quic_server
