@@ -13,7 +13,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.1.6"
+version = "0.1.1"
 authors = ["gmgalactus <godmodegalactus@gmail.com>"]
 repository = "https://github.com/jupnet/quic_geyser_plugin"
 license = "AGPL"
@@ -61,11 +61,11 @@ quinn-proto = "0.11.9"
 rustls = { version = "0.23.15", default-features = false}
 pem = "1.1.1"
 
-quic-geyser-common = {path = "common", version="0.1.5"}
-quic-geyser-client = {path = "client", version="0.1.5"}
-quic-geyser-plugin = {path = "plugin", version="0.1.5"}
-quic-geyser-server = {path = "server", version="0.1.5"}
-quic-geyser-block-builder = {path = "block-builder", version = "0.1.6"}
+quic-geyser-common = {path = "common", version="0.1.1"}
+quic-geyser-client = {path = "client", version="0.1.1"}
+quic-geyser-plugin = {path = "plugin", version="0.1.1"}
+quic-geyser-server = {path = "server", version="0.1.1"}
+quic-geyser-block-builder = {path = "block-builder", version = "0.1.1"}
 
 [profile.release]
 debug = true
