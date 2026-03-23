@@ -28,6 +28,8 @@ pub struct ConfigQuicPlugin {
     pub quic_parameters: QuicParameters,
     #[serde(default)]
     pub compression_parameters: CompressionParameters,
+    #[serde(default)]
+    pub dictionary_compression: DictionaryCompressionConfig,
     #[serde(default = "ConfigQuicPlugin::default_number_of_retries")]
     pub number_of_retries: u64,
     #[serde(default = "default_true")]
@@ -141,4 +143,49 @@ impl Default for QuicParameters {
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct CompressionParameters {
     pub compression_type: CompressionType,
+}
+
+/// Configuration for dictionary-based compression
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct DictionaryCompressionConfig {
+    /// Enable dictionary-based compression for transactions
+    #[serde(default)]
+    pub enabled: bool,
+    /// Interval in seconds between dictionary updates
+    #[serde(default = "default_dict_update_interval")]
+    pub update_interval_secs: u64,
+    /// Minimum samples needed before training a dictionary
+    #[serde(default = "default_min_samples")]
+    pub min_samples_for_training: usize,
+    /// Maximum dictionary size in bytes (max 65536 for LZ4)
+    #[serde(default = "default_dict_size")]
+    pub max_dictionary_size: usize,
+    /// Number of recent transactions to keep for training
+    #[serde(default = "default_training_window")]
+    pub training_window_size: usize,
+}
+
+fn default_dict_update_interval() -> u64 {
+    30
+}
+fn default_min_samples() -> usize {
+    1000
+}
+fn default_dict_size() -> usize {
+    65536 // 64KB max for LZ4
+}
+fn default_training_window() -> usize {
+    10000
+}
+
+impl Default for DictionaryCompressionConfig {
+    fn default() -> Self {
+        Self {
+            enabled: false,
+            update_interval_secs: default_dict_update_interval(),
+            min_samples_for_training: default_min_samples(),
+            max_dictionary_size: default_dict_size(),
+            training_window_size: default_training_window(),
+        }
+    }
 }

@@ -1,12 +1,13 @@
 use serde::{Deserialize, Serialize};
 
 use crate::{
+    dictionary::CompressionDictionary,
     filters::Filter,
     types::{
         account::Account,
         block::Block,
         block_meta::{BlockMeta, SlotMeta},
-        transaction::Transaction,
+        transaction::{CompressedTransaction, Transaction},
     },
 };
 
@@ -17,9 +18,13 @@ pub enum Message {
     SlotMsg(SlotMeta),
     BlockMetaMsg(BlockMeta),
     TransactionMsg(Box<Transaction>),
+    /// Compressed transaction with dictionary-compressed message and logs
+    CompressedTransactionMsg(Box<CompressedTransaction>),
     BlockMsg(Block),
     Filters(Vec<Filter>), // sent from client to server
     Ping,
+    /// Dictionary update from server to client
+    DictionaryUpdate(CompressionDictionary),
 }
 
 impl Message {

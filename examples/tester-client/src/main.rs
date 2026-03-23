@@ -278,6 +278,16 @@ async fn run_client_non_blocking(
                 quic_geyser_common::message::Message::Ping => {
                     // not supported
                 }
+                quic_geyser_common::message::Message::CompressedTransactionMsg(_) => {
+                    // Should be handled by client internally, but count as transaction
+                    client_stats
+                        .transaction_notifications
+                        .fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+                }
+                quic_geyser_common::message::Message::DictionaryUpdate(_) => {
+                    // Dictionary updates are handled by client internally
+                    log::debug!("Received dictionary update");
+                }
             }
         }
 
