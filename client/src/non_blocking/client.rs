@@ -20,6 +20,8 @@ use std::sync::Arc;
 use std::time::Duration;
 use tokio::io::AsyncWriteExt;
 
+use super::dictionary_store::ClientDictionaryStore;
+
 fn create_endpoint(connection_parameters: ConnectionParameters, keypair: &Keypair) -> Endpoint {
     let (cert, priv_key) = new_dummy_x509_certificate(&keypair);
     let mut endpoint = {
@@ -101,6 +103,51 @@ pub async fn send_message(send_stream: &mut SendStream, message: &Message) -> an
 
 const MAX_BUFFER_SIZE: usize = 10 * 1024 * 1024;
 
+/// Process incoming messages, handling dictionary updates and compressed transactions
+async fn process_message(
+    message: Message,
+    dict_store: &Arc<ClientDictionaryStore>,
+    output_queue: &tokio::sync::mpsc::UnboundedSender<Message>,
+) -> anyhow::Result<()> {
+    match message {
+        Message::DictionaryUpdate(dict) => {
+            // Store the dictionary and process any pending decompressions
+            dict_store.store(dict).await;
+
+            // Try to decompress any pending transactions
+            let decompressed = dict_store.process_pending().await;
+            for tx in decompressed {
+                output_queue.send(Message::TransactionMsg(Box::new(tx)))?;
+            }
+            // Don't forward dictionary updates to the application
+            Ok(())
+        }
+        Message::CompressedTransactionMsg(compressed) => {
+            // Try to decompress the transaction
+            match dict_store.decompress_or_queue(*compressed).await {
+                Ok(Some(tx)) => {
+                    // Successfully decompressed, forward as regular TransactionMsg
+                    output_queue.send(Message::TransactionMsg(Box::new(tx)))?;
+                }
+                Ok(None) => {
+                    // Transaction queued, waiting for dictionary
+                    log::debug!("Transaction queued, waiting for dictionary");
+                }
+                Err(missing) => {
+                    // Missing dictionaries, transaction queued
+                    log::debug!("Transaction queued, missing dictionaries: {:?}", missing);
+                }
+            }
+            Ok(())
+        }
+        other => {
+            // Forward all other messages directly
+            output_queue.send(other)?;
+            Ok(())
+        }
+    }
+}
+
 impl Client {
     pub async fn new(
         server_address: String,
@@ -118,9 +165,13 @@ impl Client {
         let (message_sx_queue, message_rx_queue) =
             tokio::sync::mpsc::unbounded_channel::<Message>();
 
+        // Create shared dictionary store for handling compressed transactions
+        let dict_store = Arc::new(ClientDictionaryStore::new());
+
         let connection = connecting.await?;
         let jh1 = {
             let connection = connection.clone();
+            let dict_store = dict_store.clone();
             tokio::spawn(async move {
                 loop {
                     // sender is closed / no messages to send
@@ -131,6 +182,7 @@ impl Client {
                     match stream {
                         Ok(mut recv_stream) => {
                             let message_sx_queue = message_sx_queue.clone();
+                            let dict_store = dict_store.clone();
                             tokio::spawn(async move {
                                 let mut buffer = StreamBuffer::<MAX_BUFFER_SIZE>::new();
                                 'read_loop: loop {
@@ -140,8 +192,10 @@ impl Client {
                                             while let Some((message, size)) =
                                                 Message::from_binary_stream(&buffer.as_buffer())
                                             {
-                                                if let Err(e) = message_sx_queue.send(message) {
-                                                    log::error!("Message sent error : {:?}", e);
+                                                // Process special messages (dictionary updates, compressed transactions)
+                                                let processed = process_message(message, &dict_store, &message_sx_queue).await;
+                                                if let Err(e) = processed {
+                                                    log::error!("Message processing error : {:?}", e);
                                                     break 'read_loop;
                                                 }
                                                 buffer.consume(size);
@@ -228,7 +282,7 @@ mod tests {
     use quic_geyser_common::{
         channel_message::AccountData,
         compression::CompressionType,
-        config::{CompressionParameters, ConfigQuicPlugin, QuicParameters},
+        config::{CompressionParameters, ConfigQuicPlugin, DictionaryCompressionConfig, QuicParameters},
         filters::Filter,
         message::Message,
         net::parse_host_port,
@@ -287,6 +341,7 @@ mod tests {
                     compression_parameters: CompressionParameters {
                         compression_type: CompressionType::None,
                     },
+                    dictionary_compression: DictionaryCompressionConfig::default(),
                     number_of_retries: 100,
                     log_level: "debug".to_string(),
                     allow_accounts: true,
@@ -343,10 +398,29 @@ mod tests {
         log::info!("subscribed");
         tokio::time::sleep(Duration::from_millis(100)).await;
 
-        for (cnt, message_sent) in msgs.iter().enumerate() {
+        // Collect all received messages (order may vary due to multiple QUIC streams)
+        let mut received_msgs = Vec::new();
+        for cnt in 0..msgs.len() {
             let msg = reciever.recv().await.unwrap();
             log::info!("got message : {}", cnt);
-            assert_eq!(*message_sent, msg);
+            received_msgs.push(msg);
+        }
+
+        // Sort both sent and received by (slot, data_length) for comparison
+        let extract_key = |m: &Message| -> (u64, u64) {
+            match m {
+                Message::AccountMsg(acc) => (acc.slot_identifier.slot, acc.data_length),
+                _ => (0, 0),
+            }
+        };
+        let mut sent_sorted: Vec<_> = msgs.iter().cloned().collect();
+        sent_sorted.sort_by_key(|m| extract_key(m));
+        received_msgs.sort_by_key(|m| extract_key(m));
+
+        // Compare sorted collections
+        assert_eq!(sent_sorted.len(), received_msgs.len());
+        for (sent, received) in sent_sorted.iter().zip(received_msgs.iter()) {
+            assert_eq!(*sent, *received);
         }
         jh.abort();
     }

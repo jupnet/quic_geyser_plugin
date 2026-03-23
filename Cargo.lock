@@ -3315,6 +3315,7 @@ version = "2.1.6-jupnet.1"
 source = "git+https://github.com/jupnet/jupnet-svm.git#0ce0217de74651aa23a9904dfa21bc65250e1f2d"
 dependencies = [
  "bincode",
+ "hex",
  "jupnet-bls-sdk",
  "jupnet-sdk",
  "log",
@@ -3823,6 +3824,7 @@ dependencies = [
  "base64 0.22.1",
  "bincode",
  "bs58",
+ "hex",
  "indicatif",
  "jupnet-account-decoder-client-types",
  "jupnet-cross-chain-core-primitives",
@@ -4422,6 +4424,15 @@ checksum = "6bd8c0d6c6ed0cd30b3652886bb8711dc4bb01d637a68105a3d5158039b418e6"
 dependencies = [
  "cc",
  "libc",
+]
+
+[[package]]
+name = "lz4_flex"
+version = "0.11.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "373f5eceeeab7925e0c1098212f2fbc4d416adec9d35051a6ab251e824c1854a"
+dependencies = [
+ "twox-hash",
 ]
 
 [[package]]
@@ -5142,11 +5153,13 @@ dependencies = [
  "jupnet-transaction-status",
  "log",
  "lz4",
+ "lz4_flex",
  "rand 0.8.5",
  "serde",
  "thiserror 1.0.69",
  "tokio",
  "tracing-subscriber 0.3.20",
+ "zstd",
 ]
 
 [[package]]
@@ -6720,6 +6733,12 @@ name = "try-lock"
 version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e421abadd41a4225275504ea4d6566923418b7f05506fbc9c0fe86ba7396114b"
+
+[[package]]
+name = "twox-hash"
+version = "2.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9ea3136b675547379c4bd395ca6b938e5ad3c3d20fad76e7fe85f9e0d011419c"
 
 [[package]]
 name = "typenum"

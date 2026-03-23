@@ -11,7 +11,7 @@ use jupnet_sdk::{
 };
 use quic_geyser_common::{
     channel_message::{AccountData, ChannelMessage},
-    config::{CompressionParameters, ConfigQuicPlugin, QuicParameters},
+    config::{CompressionParameters, ConfigQuicPlugin, DictionaryCompressionConfig, QuicParameters},
     net::parse_host_port,
     types::{
         slot_identifier::SlotIdentifier,
@@ -40,6 +40,7 @@ pub async fn main() -> anyhow::Result<()> {
         compression_parameters: CompressionParameters {
             compression_type: quic_geyser_common::compression::CompressionType::None,
         },
+        dictionary_compression: DictionaryCompressionConfig::default(),
         number_of_retries: 100,
         allow_accounts: true,
         allow_accounts_at_startup: false,

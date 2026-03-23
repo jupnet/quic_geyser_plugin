@@ -26,6 +26,7 @@ impl QuicServer {
         let socket = config.address;
         let compression_type = config.compression_parameters.compression_type;
         let quic_parameters = config.quic_parameters.clone();
+        let dictionary_config = config.dictionary_compression.clone();
 
         // channel for 32k messages
         let (data_channel_sender, data_channel_tx) = tokio::sync::broadcast::channel(32 * 1024);
@@ -37,6 +38,7 @@ impl QuicServer {
                 socket,
                 data_channel_tx,
                 compression_type,
+                dictionary_config,
             )
             .await
             {

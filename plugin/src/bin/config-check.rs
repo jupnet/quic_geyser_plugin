@@ -15,7 +15,7 @@ fn main() -> anyhow::Result<()> {
     let args = Args::parse();
 
     if args.print_example {
-        use quic_geyser_common::config::{CompressionParameters, ConfigQuicPlugin, QuicParameters};
+        use quic_geyser_common::config::{CompressionParameters, ConfigQuicPlugin, DictionaryCompressionConfig, QuicParameters};
         use quic_geyser_plugin::config::Config;
         use serde_json::json;
         use std::net::{Ipv4Addr, SocketAddrV4};
@@ -40,6 +40,7 @@ fn main() -> anyhow::Result<()> {
                 compression_parameters: CompressionParameters {
                     compression_type: quic_geyser_common::compression::CompressionType::Lz4Fast(8),
                 },
+                dictionary_compression: DictionaryCompressionConfig::default(),
                 number_of_retries: 100,
                 allow_accounts: true,
                 allow_accounts_at_startup: false,

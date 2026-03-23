@@ -3,7 +3,7 @@ use cli::Args;
 use jupnet_sdk::signature::Keypair;
 use quic_geyser_common::{
     channel_message::{AccountData, ChannelMessage},
-    config::{CompressionParameters, ConfigQuicPlugin, QuicParameters},
+    config::{CompressionParameters, ConfigQuicPlugin, DictionaryCompressionConfig, QuicParameters},
     filters::{Filter, TransactionDetails, TransactionFilter},
     net::parse_host_port,
     types::connections_parameters::ConnectionParameters,
@@ -73,6 +73,7 @@ pub async fn main() -> anyhow::Result<()> {
                 args.compression_speed,
             ),
         },
+        dictionary_compression: DictionaryCompressionConfig::default(),
         number_of_retries: 100,
         allow_accounts: true,
         allow_accounts_at_startup: false,
