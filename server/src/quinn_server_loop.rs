@@ -178,7 +178,7 @@ fn read_stream_for_filters(
                 break;
             }
 
-            if circular_buffer.len() > 0 {
+            if !circular_buffer.is_empty() {
                 let data = circular_buffer.as_buffer();
                 let message = Message::from_binary_stream(&data);
                 if let Some((message, len)) = message {
