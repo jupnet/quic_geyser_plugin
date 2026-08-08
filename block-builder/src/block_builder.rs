@@ -17,8 +17,9 @@ pub fn start_block_building_thread(
     output: tokio::sync::broadcast::Sender<ChannelMessage>,
     compression_type: CompressionType,
     build_blocks_with_accounts: bool,
+    handle: &tokio::runtime::Handle,
 ) {
-    tokio::spawn(async move {
+    handle.spawn(async move {
         build_blocks(
             channel_messages,
             output,

@@ -1,13 +1,13 @@
 {
   "libpath": "target/release/libquic_geyser_plugin.so",
   "quic_plugin": {
+    "enable_block_builder": true,
     "address": "[::]:10900",
-    "quic_parameters" : {
-        "disconnect_laggy_client" : true
+    "quic_parameters": {
+      "disconnect_laggy_client": true
     },
     "compression_parameters": {
-        "compression_type": {"Lz4Fast":8}
-      }
+      "compression_type": { "Lz4Fast": 8 }
+    }
   }
 }
-
